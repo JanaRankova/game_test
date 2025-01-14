@@ -1,16 +1,8 @@
-import { useState, useEffect } from 'react'
-import { useGetPokemon, useGetAllPokemons } from './api'
-
-type PokemonList = { name: string; url: string }[]
+import { useGetAllPokemons } from './api'
+import Content from './components/Content'
 
 function App() {
-	const pokemonName = 'ditto'
-	//const { isLoading, data } = useGetPokemon(pokemonName)
-	const { isLoading, data } = useGetAllPokemons()
-	// const facK = (data: PokemonList | undefined) => {
-	// 	const list = data && Object.keys(data).map((k) => data[k])
-
-	// }
+	const { isLoading, data: allPokemonList, isError } = useGetAllPokemons()
 
 	return (
 		<>
@@ -19,31 +11,13 @@ function App() {
 				<div className="side">
 					Here lays dragons of non-existent side bar!
 				</div>
-				<div className="main-content">
-					{/* {isLoading ? (
-						<p>load</p>
-					) : (
-						data && (
-							<>
-								<h1>{data.name}</h1>
-								<h3>{data.id}</h3>
-								<img
-									src={data.sprites.front_default || undefined}
-									height={150}
-									width={150}
-								/>
-							</>
-						)
-					)} */}
-					{isLoading ? (
-						<p>load</p>
-					) : (
-						data &&
-						data.results.map((item, index) => (
-							<div key={index}>{item.name}</div>
-						))
+				<>
+					{isLoading && <div className="loading">LOADING</div>}
+					{isError && <div className="error">Error</div>}
+					{allPokemonList?.results && (
+						<Content allPokemonList={allPokemonList?.results} />
 					)}
-				</div>
+				</>
 			</div>
 			<div className="bottom"> BOTTOM</div>
 		</>

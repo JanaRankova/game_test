@@ -1,9 +1,16 @@
-import { useQuery } from 'react-query'
+import { useQuery, useQueries, UseQueryResult } from 'react-query'
 import { MainClient, Pokemon } from 'pokenode-ts'
 
-type PokemonList = { name: string; url: string }[]
+export type PokemonList = { name: string; url: string }[]
 interface AllPokResponse {
 	results: PokemonList
+}
+
+export interface PokemonDetails {
+	id: number
+	name: string
+	spriteFront: string
+	spriteBack: string
 }
 
 const api = new MainClient()
@@ -42,4 +49,31 @@ export function useGetAllPokemons() {
 			return response.json()
 		},
 	})
+}
+
+export function useGetEveryPokemonData(allPokemonListResponse: PokemonList) {
+	return useQueries(
+		allPokemonListResponse
+			? allPokemonListResponse.map((listedPokemon) => {
+					return {
+						queryKey: ['pokemon', listedPokemon.name],
+						queryFn: async () => {
+							const response = await fetch(listedPokemon.url)
+
+							if (!response.ok) {
+								throw new Error('Error while fetching pokemon data.')
+							}
+
+							return response.json()
+						},
+						select: (pokemon: Pokemon) => ({
+							id: pokemon.id,
+							name: pokemon.name,
+							spriteFront: pokemon.sprites.front_default,
+							spriteBack: pokemon.sprites.back_default,
+						}),
+					}
+				})
+			: [],
+	) as UseQueryResult<PokemonDetails>[]
 }

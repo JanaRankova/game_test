@@ -1,6 +1,21 @@
 import { useEffect, useState } from 'react'
 import { PokemonList, useGetEveryPokemonData, PokemonDetails } from '../api'
-import PxsCard from './Cards/PxsCard'
+import PexesoField from './Field'
+
+const cards: {
+	position: number[]
+	name: string
+}[] = []
+
+for (let index = 0; index < 4; index++) {
+	console.log('index', index)
+
+	for (let i = 0; i < 4; i++) {
+		console.log(i)
+
+		cards.push({ name: '', position: [index, i] })
+	}
+}
 
 interface Props {
 	allPokemonList: PokemonList
@@ -34,16 +49,10 @@ export default function Content({ allPokemonList }: Props) {
 		)
 	}, [allLoaded])
 
-	const ditto = (detailedList || []).find((p) => p.id === 132)
-
 	return (
-		<div>
-			{allLoaded && ditto && (
-				<PxsCard
-					id={ditto.id}
-					name={ditto.name}
-					sprite={ditto.spriteFront}
-				/>
+		<div className="main-content">
+			{allLoaded && detailedList && (
+				<PexesoField allPokemons={detailedList} />
 			)}
 			{/* {allPokemonList.map((p) => (
 				<p key={p.name}>

@@ -16,8 +16,14 @@ export default function PxsCard({
 	isFlipped,
 	onCardFlip,
 }: Props) {
+	const [flipped, setFlipped] = useState(false)
+	const handleCardFlip = () => {
+		//setFlipped(true)
+		onCardFlip(id)
+	}
+
 	return (
-		<div className="pxs_card" onClick={() => onCardFlip(id)}>
+		<div className="pxs_card" onClick={handleCardFlip}>
 			<div className="img_wrapper">
 				<img
 					src={isFlipped ? sprite : backImage}

@@ -64,12 +64,12 @@ body
 	grid-template-columns: 1fr 1fr 1fr 1fr
 	gap: 16px
 
-	*:nth-child(odd)
-		background: variables.$lightGrey
+	// *:nth-child(odd)
+	// 	background: variables.$lightGrey
 
-	*:nth-child(even)
-		background: variables.$yellow
-		color: variables.$black
+	// *:nth-child(even)
+	// 	background: variables.$yellow
+	// 	color: variables.$black
 
 	.psx-square
 		display: flex
@@ -77,6 +77,31 @@ body
 		align-items: center
 		height: 120px
 		width: 120px
+
+	.pxs_card
+		transition: transform 1.5s ease
+		backface-visibility: hidden
+		position: absolute
+
+		&.empty
+			height: 120px
+			width: 120px
+			background: transparent
+			border: 2px solid variables.$pokemonBlue
+
+	.back
+		background: variables.$pokemonYellowDark
+		transform: rotateY(180deg)
+
+		&.flipped
+			transform: rotateY(0deg)
+
+	.front
+		background: variables.$pokemonBlue
+		transform: rotateY(0deg)
+
+		&.flipped
+			transform: rotateY(180deg)
 
 a
 	font-weight: 500

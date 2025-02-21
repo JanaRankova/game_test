@@ -7,6 +7,13 @@ interface Props {
 	allPokemons: PokemonDetails[]
 }
 
+interface Player {
+	id: number
+	name: string
+	matchedCards: number[]
+	isActive: boolean
+}
+
 const numbers: number[] = []
 for (let index = 0; numbers.length < 16; index++) {
 	const random = Math.floor(Math.random() * 151)
@@ -25,6 +32,10 @@ export default function PexesoField({ allPokemons }: Props) {
 	/* 	for (let index = 0; index < shuffledCards.length; index++) {
 		console.log(allPokemons[numbers[index]])
 	} */
+
+	let step = 0
+
+	while (step >= 2) {}
 
 	function handleCardFlip(index: number, id: number) {
 		console.log('start')
@@ -51,20 +62,14 @@ export default function PexesoField({ allPokemons }: Props) {
 		console.log(matched)
 	}, [secondFlip[0]])
 
-	/* 	const flipped = (id: number): boolean =>
-		if (firstFlip[1] === id)
-		firstFlip[1] === id ||
-		(firstFlip.every((i) => !!i) && !!secondFlip[0] && secondFlip[1] === id)
- */
-
 	return (
 		<div className="psx-field">
 			{allPokemons &&
 				shuffledCards &&
 				shuffledCards.map((pokId, i) => (
-					<div className="psx-square" key={i}>
+					<div className={`psx-square`} key={i}>
 						{matched.includes(i) ? (
-							<span>matched</span>
+							<div className="pxs_card empty">Matched</div>
 						) : (
 							<PxsCard
 								id={allPokemons[pokId]?.id}

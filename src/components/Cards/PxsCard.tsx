@@ -23,14 +23,23 @@ export default function PxsCard({
 	}
 
 	return (
-		<div className="pxs_card" onClick={handleCardFlip}>
-			<div className="img_wrapper">
-				<img
-					src={isFlipped ? sprite : backImage}
-					width={120}
-					height={120}
-				/>
+		<>
+			<div
+				className={`pxs_card front ${isFlipped && 'flipped'}`}
+				onClick={handleCardFlip}
+			>
+				<div className="img_wrapper">
+					<img src={backImage} width={120} height={120} />
+				</div>
 			</div>
-		</div>
+			<div
+				className={`pxs_card back ${isFlipped && 'flipped'}`}
+				onClick={handleCardFlip}
+			>
+				<div className="img_wrapper">
+					<img src={sprite} width={120} height={120} />
+				</div>
+			</div>
+		</>
 	)
 }

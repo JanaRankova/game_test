@@ -8,11 +8,7 @@ const cards: {
 }[] = []
 
 for (let index = 0; index < 4; index++) {
-	console.log('index', index)
-
 	for (let i = 0; i < 4; i++) {
-		console.log(i)
-
 		cards.push({ name: '', position: [index, i] })
 	}
 }

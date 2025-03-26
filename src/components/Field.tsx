@@ -40,11 +40,13 @@ const player2: Player = {
 }
 
 export default function PexesoField({ allPokemons }: Props) {
-	const emptyFlip: Flip = [null, null]
-	const [firstFlip, setFirstFlip] = useState<Flip>(emptyFlip)
-	const [secondFlip, setSecondFlip] = useState<Flip>(emptyFlip)
-	const [player, setPlayer] = useState<Player>(basePlayer)
-	const [turn, setTurn] = useState<Flip[]>([])
+	const emptyCard: Flip = [null, null]
+	const [cardOne, setCardOne] = useState<Flip>(emptyCard)
+	const [cardTwo, setCardTwo] = useState<Flip>(emptyCard)
+	const [isPlayerOneActive, setIsPlayerOneActive] = useState(true)
+	const [playerOne, setPlayerOne] = useState<Player>(basePlayer)
+	const [playerTwo, setPlayerTwo] = useState<Player>(player2)
+	const [processing, setProcessing] = useState(false)
 	const [matched, setMatched] = useState<number[]>([])
 	/* 	for (let index = 0; index < shuffledCards.length; index++) {
 		console.log(allPokemons[numbers[index]])
@@ -59,17 +61,15 @@ export default function PexesoField({ allPokemons }: Props) {
 	function handleCardFlip(index: number, id: number) {
 		console.log('start')
 
-		if (!firstFlip[0] && !firstFlip[1]) {
-			setFirstFlip([index, id])
-		} else if (firstFlip[0] !== index && !secondFlip[0]) {
-			setSecondFlip([index, id])
-		} /*  else {
-			setFirstFlip(emptyFlip)
-			setSecondFlip(emptyFlip)
-		} */
+		if (!cardOne[0] && !cardOne[1]) {
+			setCardOne([index, id])
+		} else if (cardOne[0] !== index && !cardTwo[0]) {
+			setCardTwo([index, id])
+			process(cardOne, [index, id]) // Because state isn't updated yet
+		}
 	}
 
-	function cardsTurning(turn: Flip[], cardIndex: number, cardId: number) {
+	/* 	function cardsTurning(turn: Flip[], cardIndex: number, cardId: number) {
 		if (!turn.length) {
 			setFirstFlip([cardIndex, cardId])
 			setTurn([[cardIndex, cardId]])
@@ -78,31 +78,31 @@ export default function PexesoField({ allPokemons }: Props) {
 			setTurn([...turn, [cardIndex, cardId]])
 		}
 		console.log('Turn', turn)
-	}
+	} */
 
-	console.log('first', firstFlip)
-	console.log('second', secondFlip)
+	console.log('first', cardOne)
+	console.log('second', cardTwo)
 
 	// TODO: make a sense of a turns and flips
 	/* 	useEffect(() => {
 		console.log('here', turn)
 		if (
 			turn.length === 2 &&
-			firstFlip[0] &&
-			secondFlip[0] &&
-			firstFlip[1] === secondFlip[1]
+			cardOne[0] &&
+			cardTwo[0] &&
+			cardOne[1] === cardTwo[1]
 		) {
-			setMatched([...matched, firstFlip[0], secondFlip[0]])
-			setFirstFlip(emptyFlip)
-			setSecondFlip(emptyFlip)
+			setMatched([...matched, cardOne[0], cardTwo[0]])
+			setCardOne(emptyCard)
+			setCardTwo(emptyCard)
 			setTurn([])
 		}
 		console.log(matched)
 	}, [turn.length]) */
 
-	console.log(turn)
+	console.log('matched', matched)
 
-	if (turn.length === 2 && firstFlip[0] && secondFlip[0]) {
+	/* if (turn.length === 2 && firstFlip[0] && secondFlip[0]) {
 		console.log('did we got here?')
 		if (firstFlip[1] === secondFlip[1]) {
 			setMatched([...matched, firstFlip[0], secondFlip[0]])
@@ -110,10 +110,42 @@ export default function PexesoField({ allPokemons }: Props) {
 		setFirstFlip(emptyFlip)
 		setSecondFlip(emptyFlip)
 		setTurn([])
-	}
+	} */
 
-	function isMatch(flipFirst: Flip, flipSecond: Flip) {
-		return flipFirst[1] === flipSecond[1]
+	const process = (first: Flip, second: Flip) => {
+		console.log('process start')
+		setProcessing(true)
+		setTimeout(() => {
+			calculate(first, second)
+			setCardOne(emptyCard)
+			setCardTwo(emptyCard)
+			setProcessing(false)
+			turnCount = turnCount + 1
+		}, 1500)
+	}
+	function calculate(firstCard: Flip, secondCard: Flip) {
+		console.log('card check', firstCard[1], secondCard[1])
+
+		if (firstCard[1] === secondCard[1]) {
+			// FIXME: Type check for indexes
+			console.log('i am matched')
+
+			setMatched([...matched, firstCard[0], secondCard[0]])
+			if (isPlayerOneActive) {
+				setPlayerOne({
+					...playerOne,
+					matchedCards: [...playerOne.matchedCards, firstCard[1]],
+				}) // FIXME: Type check for indexes
+			} else {
+				setPlayerTwo({
+					...playerTwo,
+					matchedCards: [...playerTwo.matchedCards, firstCard[1]],
+				})
+			}
+		} else {
+			console.log('reset player')
+			setIsPlayerOneActive(!isPlayerOneActive)
+		}
 	}
 
 	function isGameEnd(cardsCount = 16, matched: number[]) {
@@ -150,7 +182,7 @@ export default function PexesoField({ allPokemons }: Props) {
 		<>
 			<div>
 				<p>TURN {turnCount}</p>
-				<p>{`Player <${player.name}>`}</p>
+				<p>{`Player <${isPlayerOneActive ? playerOne.name : player2.name}>`}</p>
 			</div>
 			<div className="psx-field">
 				{allPokemons &&
@@ -164,10 +196,10 @@ export default function PexesoField({ allPokemons }: Props) {
 									id={allPokemons[pokId]?.id}
 									name={allPokemons[pokId]?.name}
 									sprite={allPokemons[pokId]?.spriteFront}
-									isFlipped={i === firstFlip[0] || i === secondFlip[0]}
+									isFlipped={i === cardOne[0] || i === cardTwo[0]}
 									onCardFlip={(id) => {
 										/* handleCardFlip(i, id) */
-										cardsTurning(turn, i, id)
+										handleCardFlip(i, id)
 									}}
 								/>
 							)}

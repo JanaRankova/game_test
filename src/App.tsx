@@ -8,9 +8,9 @@ function App() {
 		<>
 			<div className="top">TOP</div>
 			<div className="content">
-				<div className="side">
+				{/* <div className="side">
 					Here lays dragons of non-existent side bar!
-				</div>
+				</div> */}
 				<>
 					{isLoading && <div className="loading">LOADING</div>}
 					{isError && <div className="error">Error</div>}

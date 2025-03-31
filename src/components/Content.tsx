@@ -1,17 +1,7 @@
 import { useEffect, useState } from 'react'
-import { PokemonList, useGetEveryPokemonData, PokemonDetails } from '../api'
+import { PokemonList, useGetEveryPokemonData } from '../api'
+import { PokemonDetails } from '../types'
 import PexesoField from './Field'
-
-const cards: {
-	position: number[]
-	name: string
-}[] = []
-
-for (let index = 0; index < 4; index++) {
-	for (let i = 0; i < 4; i++) {
-		cards.push({ name: '', position: [index, i] })
-	}
-}
 
 interface Props {
 	allPokemonList: PokemonList
@@ -50,14 +40,6 @@ export default function Content({ allPokemonList }: Props) {
 			{allLoaded && detailedList && (
 				<PexesoField allPokemons={detailedList} />
 			)}
-			{/* {allPokemonList.map((p) => (
-				<p key={p.name}>
-					{p.name}
-					<br />
-					{p.url}
-					<br />
-				</p>
-			))} */}
 		</div>
 	)
 }

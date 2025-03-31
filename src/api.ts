@@ -1,16 +1,10 @@
 import { useQuery, useQueries, UseQueryResult } from 'react-query'
 import { MainClient, Pokemon } from 'pokenode-ts'
+import { PokemonDetails } from './types'
 
 export type PokemonList = { name: string; url: string }[]
 interface AllPokResponse {
 	results: PokemonList
-}
-
-export interface PokemonDetails {
-	id: number
-	name: string
-	spriteFront: string
-	spriteBack: string
 }
 
 const api = new MainClient()

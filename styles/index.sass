@@ -2,9 +2,10 @@
 
 
 :root
-	font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif
+	font-family: variables.$baseFontFamily
+	font-size: variables.$baseFontSize
 	line-height: 1.5
-	font-weight: 400
+	font-weight: variables.$regularFontWeight
 
 	color-scheme: light dark
 	color: rgba(255, 255, 255, 0.87)
@@ -28,10 +29,16 @@ body
 .top
 	background: variables.$darkSage
 	color: #fff
+	padding: 10px
+
 
 .bottom
+	display: flex
+	flex-direction: row
+	justify-content: space-between
+	padding: 10px
 	background: variables.$darkSage
-	color: #fff
+	color: variables.$sage
 
 .content
 	display: flex
@@ -79,6 +86,7 @@ body
 .psx-field
 	display: grid
 	max-width: 720px
+	padding: 12px
 	grid-template-columns: 1fr 1fr 1fr 1fr
 	gap: 16px
 
@@ -122,6 +130,16 @@ body
 		&.flipped
 			transform: rotateY(180deg)
 
+.game-end-screen
+	position: absolute
+	display: flex
+	justify-content: center
+	align-items: center
+	width: 100%
+	padding: 12px
+	background: variables.$darkSage
+	z-index: 100
+
 a
 	font-weight: 500
 	color: variables.$spruce
@@ -131,8 +149,25 @@ a
 		color: variables.$spruce
 
 h1
-	font-size: 3.2em
-	line-height: 1.1
+	font-size: 2rem
+
+h2
+	font-size: 1.7rem
+
+h3
+	font-size: 1.4rem
+
+h4
+	font-size: 1.2rem
+
+h5
+	font-size: 1.1rem
+
+h6
+	font-size: 1rem
+
+.bold
+	font-weight: variables.$mediumFontWeight
 
 
 button

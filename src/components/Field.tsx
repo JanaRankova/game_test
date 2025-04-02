@@ -157,9 +157,15 @@ export default function PexesoField({ allPokemons }: Props) {
 							</div>
 						))}
 				</div>
-				{isGameEnd(matched, 4) && (
-					<div className="result-msg">
-						{getWinner(playerOne, playerTwo)}
+				{true /* isGameEnd(matched, 4) */ && (
+					<div className="game-end-screen">
+						<div>
+							<h4 className="bold">Game over</h4>
+							<h3 className="winner">
+								{getWinner(playerOne, playerTwo)}
+							</h3>
+							<div>Game ended after # {turnCount}.</div>
+						</div>
 					</div>
 				)}
 			</div>

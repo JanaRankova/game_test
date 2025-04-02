@@ -6,7 +6,9 @@ function App() {
 
 	return (
 		<>
-			<div className="top">TOP</div>
+			<div className="top">
+				Pokemon game logo | Memory game | Pokemon list
+			</div>
 			<div className="content">
 				{/* <div className="side">
 					Here lays dragons of non-existent side bar!
@@ -19,7 +21,10 @@ function App() {
 					)}
 				</>
 			</div>
-			<div className="bottom"> BOTTOM</div>
+			<div className="bottom">
+				<div>Showcase pokemon themed game app</div>
+				<i>Made by Jana Rankova</i>
+			</div>
 		</>
 	)
 }

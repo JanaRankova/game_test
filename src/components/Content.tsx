@@ -36,7 +36,7 @@ export default function Content({ allPokemonList }: Props) {
 	}, [allLoaded])
 
 	return (
-		<div className="main-content">
+		<div>
 			{allLoaded && detailedList && (
 				<PexesoField allPokemons={detailedList} />
 			)}

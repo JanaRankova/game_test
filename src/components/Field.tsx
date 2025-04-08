@@ -141,33 +141,37 @@ export default function PexesoField({ allPokemons }: Props) {
 					<p>{`Player <${isPlayerOneActive ? playerOne.name : player2.name}>`}</p>
 				</div>
 				<div className="psx-field">
-					{allPokemons &&
-						shuffledCards &&
-						shuffledCards.map((pokeId, i) => (
-							<div className={`psx-square`} key={i}>
-								{matched.includes(i) ? (
-									<div className="pxs_card empty" />
-								) : (
-									<PxsCard
-										sprite={allPokemons[pokeId]?.spriteFront}
-										isFlipped={i === cardOne[0] || i === cardTwo[0]}
-										onCardFlip={() => handleCardFlip(i, pokeId)}
-									/>
-								)}
-							</div>
-						))}
-				</div>
-				{true /* isGameEnd(matched, 4) */ && (
-					<div className="game-end-screen">
-						<div>
-							<h4 className="bold">Game over</h4>
-							<h3 className="winner">
-								{getWinner(playerOne, playerTwo)}
-							</h3>
-							<div>Game ended after # {turnCount}.</div>
-						</div>
+					<div className="pexeso">
+						{allPokemons &&
+							shuffledCards &&
+							shuffledCards.map((pokeId, i) => (
+								<div className={`psx-square`} key={i}>
+									{matched.includes(i) ? (
+										<div className="pxs_card empty" />
+									) : (
+										<PxsCard
+											sprite={allPokemons[pokeId]?.spriteFront}
+											isFlipped={
+												i === cardOne[0] || i === cardTwo[0]
+											}
+											onCardFlip={() => handleCardFlip(i, pokeId)}
+										/>
+									)}
+								</div>
+							))}
 					</div>
-				)}
+					{true /* isGameEnd(matched, 4) */ && (
+						<div className="game-end-screen">
+							<div>
+								<h4 className="bold">Game over</h4>
+								<h3 className="winner">
+									{getWinner(playerOne, playerTwo)}
+								</h3>
+								<div>Game ended after # {turnCount}.</div>
+							</div>
+						</div>
+					)}
+				</div>
 			</div>
 			<PlayerPanel player={playerTwo} />
 		</div>

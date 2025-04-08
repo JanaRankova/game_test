@@ -1,5 +1,6 @@
 import { useGetAllPokemons } from './api'
 import Content from './components/Content'
+import pkmLogo from './assets/pokemon-logo-png-file-pokemon-logo-png-500.png'
 
 function App() {
 	const { isLoading, data: allPokemonList, isError } = useGetAllPokemons()
@@ -7,19 +8,20 @@ function App() {
 	return (
 		<>
 			<div className="top">
-				Pokemon game logo | Memory game | Pokemon list
+				<img src={pkmLogo} height="48" />
+				<div className="btn top-panel">Memory game</div>
+				<div className="btn top-panel">Pokemon list</div>
 			</div>
 			<div className="content">
-				{/* <div className="side">
-					Here lays dragons of non-existent side bar!
-				</div> */}
-				<>
+				<div className="left" />
+				<div className="main-content">
 					{isLoading && <div className="loading">LOADING</div>}
 					{isError && <div className="error">Error</div>}
 					{allPokemonList?.results && (
 						<Content allPokemonList={allPokemonList?.results} />
 					)}
-				</>
+				</div>
+				<div className="right" />
 			</div>
 			<div className="bottom">
 				<div>Showcase pokemon themed game app</div>

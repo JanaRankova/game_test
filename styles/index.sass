@@ -67,6 +67,17 @@ body
 .right
 	border-left: 1px solid variables.$greyLight
 
+.loading
+	display: flex
+	flex-direction: column
+	justify-content: center
+	align-items: center
+	padding: 20px
+
+	img
+		margin: 20px
+
+
 .main-content
 	display: flex
 	flex-direction: column
@@ -128,10 +139,10 @@ body
 		transition: transform 1.5s ease
 		backface-visibility: hidden
 		position: absolute
+		height: 120px
+		width: 120px
 
 		&.empty
-			height: 120px
-			width: 120px
 			background: transparent
 			border: 1px solid variables.$greyLight
 

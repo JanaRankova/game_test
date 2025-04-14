@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { shuffleArray } from '../utils'
 import PxsCard from './Cards/PxsCard'
 import PlayerPanel from './Player'
@@ -19,15 +19,15 @@ for (let index = 0; numbers.length < 16; index++) {
 }
 const shuffledCards = shuffleArray(numbers)
 
-const basePlayer: Player = {
+const defaultPlayer1: Player = {
 	id: 0,
-	name: '1',
+	name: 'Player 1',
 	matchedCards: [],
 	isActive: true,
 }
-const player2: Player = {
+const defaultPlayer2: Player = {
 	id: 1,
-	name: '2',
+	name: 'Player 2',
 	matchedCards: [],
 	isActive: false,
 }
@@ -37,15 +37,13 @@ export default function PexesoField({ allPokemons }: Props) {
 	const [cardOne, setCardOne] = useState<Flip>(emptyCard)
 	const [cardTwo, setCardTwo] = useState<Flip>(emptyCard)
 	const [isPlayerOneActive, setIsPlayerOneActive] = useState(true)
-	const [playerOne, setPlayerOne] = useState<Player>(basePlayer)
-	const [playerTwo, setPlayerTwo] = useState<Player>(player2)
+	const [playerOne, setPlayerOne] = useState<Player>(defaultPlayer1)
+	const [playerTwo, setPlayerTwo] = useState<Player>(defaultPlayer2)
 	const [processing, setProcessing] = useState(false)
 	const [matched, setMatched] = useState<number[]>([])
 	const [turnCount, setTurnCount] = useState(1)
 
-	function handleCardFlip(index: number, id: number) {
-		console.log('start')
-
+	const handleCardFlip = (index: number, id: number) => {
 		if (processing) {
 			return
 		}
@@ -54,7 +52,7 @@ export default function PexesoField({ allPokemons }: Props) {
 			setCardOne([index, id])
 		} else if (cardOne[0] !== index && !cardTwo[0]) {
 			setCardTwo([index, id])
-			processTurn(cardOne, [index, id]) // Because state isn't updated yet
+			processTurn(cardOne, [index, id])
 		}
 	}
 
@@ -69,7 +67,7 @@ export default function PexesoField({ allPokemons }: Props) {
 		setTurnCount(turnCount + 1)
 	}
 
-	function calculate(firstCard: Flip, secondCard: Flip) {
+	const calculate = (firstCard: Flip, secondCard: Flip) => {
 		console.log('card check', firstCard[1], secondCard[1])
 
 		if (firstCard[1] === secondCard[1]) {
@@ -100,11 +98,12 @@ export default function PexesoField({ allPokemons }: Props) {
 		}
 	}
 
-	function isGameEnd(matched: number[], cardsCount = 16) {
+	const isGameEnd = (matched: number[], cardsCount = 16) => {
 		console.log('cardsCount', cardsCount, matched.length)
 		// FIXME: return back to max
 		return 4 === matched.length
 	}
+
 	const processTurn = (first: Flip, second: Flip) => {
 		console.log('process start')
 		setProcessing(true)
@@ -114,11 +113,7 @@ export default function PexesoField({ allPokemons }: Props) {
 		}, 1500)
 	}
 
-	/* 	useEffect(() => {
-		console.log(getWinner(playerOne, playerTwo))
-	}, [isGameEnd(matched, 4)]) */
-
-	function getWinner(playerFirst: Player, playerSecond: Player): string {
+	const getWinner = (playerFirst: Player, playerSecond: Player): string => {
 		if (
 			playerFirst.matchedCards.length === playerSecond.matchedCards.length
 		) {
@@ -132,13 +127,15 @@ export default function PexesoField({ allPokemons }: Props) {
 		}
 	}
 
+	const resetGame = () => {}
+
 	return (
 		<div className="game">
 			<PlayerPanel player={playerOne} />
 			<div className="field-wrap">
 				<div>
 					<p>TURN {turnCount}</p>
-					<p>{`Player <${isPlayerOneActive ? playerOne.name : player2.name}>`}</p>
+					<p>{`Player <${isPlayerOneActive ? playerOne.name : defaultPlayer2.name}>`}</p>
 				</div>
 				<div className="psx-field">
 					<div className="pexeso">

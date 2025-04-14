@@ -1,5 +1,6 @@
 import { useGetAllPokemons } from './api'
 import Content from './components/Content'
+import Loading from './components/Loading'
 import pkmLogo from './assets/pokemon-logo-png-file-pokemon-logo-png-500.png'
 
 function App() {
@@ -15,11 +16,11 @@ function App() {
 			<div className="content">
 				<div className="left" />
 				<div className="main-content">
-					{isLoading && <div className="loading">LOADING</div>}
-					{isError && <div className="error">Error</div>}
+					{true /* isLoading */ && <Loading />}
+					{/* {isError && <div className="error">Error</div>}
 					{allPokemonList?.results && (
 						<Content allPokemonList={allPokemonList?.results} />
-					)}
+					)} */}
 				</div>
 				<div className="right" />
 			</div>

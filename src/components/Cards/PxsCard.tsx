@@ -1,5 +1,4 @@
 import backImage from '../../assets/pokeball-16809.png'
-
 import CardContent from './CardContent'
 
 interface Props {

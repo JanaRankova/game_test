@@ -16,11 +16,11 @@ function App() {
 			<div className="content">
 				<div className="left" />
 				<div className="main-content">
-					{true /* isLoading */ && <Loading />}
-					{/* {isError && <div className="error">Error</div>}
+					{isLoading && <Loading />}
+					{isError && <div className="error">Error</div>}
 					{allPokemonList?.results && (
 						<Content allPokemonList={allPokemonList?.results} />
-					)} */}
+					)}
 				</div>
 				<div className="right" />
 			</div>

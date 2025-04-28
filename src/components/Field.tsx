@@ -99,9 +99,7 @@ export default function PexesoField({ allPokemons }: Props) {
 	}
 
 	const isGameEnd = (matched: number[], cardsCount = 16) => {
-		console.log('cardsCount', cardsCount, matched.length)
-		// FIXME: return back to max
-		return 4 === matched.length
+		return cardsCount === matched.length
 	}
 
 	const processTurn = (first: Flip, second: Flip) => {
@@ -157,7 +155,7 @@ export default function PexesoField({ allPokemons }: Props) {
 								</div>
 							))}
 					</div>
-					{true /* isGameEnd(matched, 4) */ && (
+					{isGameEnd(matched) && (
 						<div className="game-end-screen">
 							<div>
 								<h4 className="bold">Game over</h4>

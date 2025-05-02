@@ -1,6 +1,3 @@
-/// <reference types="vite/client" />
-/// <reference types="vite-plugin-svgr/client" />
-
 export interface PokemonDetails {
 	id: number
 	name: string
@@ -13,6 +10,7 @@ export interface Player {
 	name: string
 	matchedCards: PokemonDetails[]
 	isActive: boolean
+	gamesWon: number
 }
 
 export type Flip = (number | null)[]

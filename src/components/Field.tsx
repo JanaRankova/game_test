@@ -1,47 +1,61 @@
-import { useState } from 'react'
+import RestartSvg from '../assets/icons/reload.svg?react'
+import { useState, useEffect } from 'react'
+import classNames from 'classnames'
+
+import { Player, Flip } from '../types'
 import { shuffleArray } from '../utils'
+
 import PxsCard from './Cards/PxsCard'
 import PlayerPanel from './Player'
-import { PokemonDetails } from '../types'
-import { Player, Flip } from '../types'
 
 interface Props {
 	allPokemons: PokemonDetails[]
 }
-
-const numbers: number[] = []
-for (let index = 0; numbers.length < 16; index++) {
-	const random = Math.floor(Math.random() * 151)
-	if (!numbers.includes(random)) {
-		numbers.push(random)
-		numbers.push(random)
-	}
-}
-const shuffledCards = shuffleArray(numbers)
 
 const defaultPlayer1: Player = {
 	id: 0,
 	name: 'Player 1',
 	matchedCards: [],
 	isActive: true,
+	gamesWon: 0,
 }
 const defaultPlayer2: Player = {
 	id: 1,
 	name: 'Player 2',
 	matchedCards: [],
 	isActive: false,
+	gamesWon: 0,
 }
 
 export default function PexesoField({ allPokemons }: Props) {
+	const [shuffledCards, setShuffledCards] = useState<number[]>([])
 	const emptyCard: Flip = [null, null]
 	const [cardOne, setCardOne] = useState<Flip>(emptyCard)
 	const [cardTwo, setCardTwo] = useState<Flip>(emptyCard)
-	const [isPlayerOneActive, setIsPlayerOneActive] = useState(true)
 	const [playerOne, setPlayerOne] = useState<Player>(defaultPlayer1)
 	const [playerTwo, setPlayerTwo] = useState<Player>(defaultPlayer2)
+	const [isPlayerOneActive, setIsPlayerOneActive] = useState(
+		playerOne.isActive,
+	)
 	const [processing, setProcessing] = useState(false)
 	const [matched, setMatched] = useState<number[]>([])
 	const [turnCount, setTurnCount] = useState(1)
+
+	const getNewDeck = () => {
+		const numbers: number[] = []
+		for (let index = 0; numbers.length < 16; index++) {
+			const random = Math.floor(Math.random() * 151)
+			if (!numbers.includes(random)) {
+				numbers.push(random)
+				numbers.push(random)
+			}
+		}
+		setShuffledCards(shuffleArray(numbers))
+	}
+
+	useEffect(() => {
+		getNewDeck()
+	}, [])
 
 	const handleCardFlip = (index: number, id: number) => {
 		if (processing) {
@@ -119,13 +133,35 @@ export default function PexesoField({ allPokemons }: Props) {
 		} else if (
 			playerFirst.matchedCards.length > playerSecond.matchedCards.length
 		) {
+			setPlayerOne((prev) => ({ ...prev, gamesWon: ++prev.gamesWon }))
 			return `Winner is ${playerFirst.name}!`
 		} else {
+			setPlayerTwo((prev) => ({ ...prev, gamesWon: ++prev.gamesWon }))
 			return `Winner is ${playerSecond.name}!`
 		}
 	}
 
-	const resetGame = () => {}
+	const resetGame = () => {
+		// Winner is the first on turn
+		/* if (getWinner(playerOne, playerTwo) === playerOne.name) {
+			setPlayerOne((prev) => ({
+				...prev,
+				gamesWon: ++prev.gamesWon,
+			}))
+			setIsPlayerOneActive(true)
+		} else {
+			setPlayerTwo((prev) => ({
+				...prev,
+				gamesWon: ++prev.gamesWon,
+			}))
+			setIsPlayerOneActive(false)
+		} */
+		// setPlayerOne((prev) => ({ ...prev, matchedCards: [] }))
+		// setPlayerTwo((prev) => ({ ...prev, matchedCards: [] }))
+		getNewDeck()
+		setMatched([])
+		setTurnCount(0)
+	}
 
 	return (
 		<div className="game">
@@ -155,17 +191,31 @@ export default function PexesoField({ allPokemons }: Props) {
 								</div>
 							))}
 					</div>
-					{isGameEnd(matched) && (
-						<div className="game-end-screen">
-							<div>
-								<h4 className="bold">Game over</h4>
-								<h3 className="winner">
-									{getWinner(playerOne, playerTwo)}
-								</h3>
-								<div>Game ended after # {turnCount}.</div>
+					{
+						/* isGameEnd(matched) */ true && (
+							<div className="game-end-screen">
+								<div>
+									<h4 className="bold">Game over</h4>
+									<h3 className="winner">
+										{getWinner(playerOne, playerTwo)}
+									</h3>
+									<div>Game ended after # {turnCount}.</div>
+									<button onClick={resetGame} title="Restart game">
+										<span>
+											Restart game
+											<RestartSvg
+												className={classNames(
+													'icon',
+													'normal',
+													'light',
+												)}
+											/>
+										</span>
+									</button>
+								</div>
 							</div>
-						</div>
-					)}
+						)
+					}
 				</div>
 			</div>
 			<PlayerPanel player={playerTwo} />

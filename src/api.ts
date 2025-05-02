@@ -1,14 +1,11 @@
 import { useQuery, useQueries, UseQueryResult } from 'react-query'
-import { MainClient, Pokemon } from 'pokenode-ts'
-import { PokemonDetails } from './types'
+import { Pokemon } from 'pokenode-ts'
 
 export type PokemonList = { name: string; url: string }[]
 interface AllPokResponse {
 	results: PokemonList
 }
 
-const api = new MainClient()
-// TODO Add other generations?
 const gen1 = { limit: 150, offset: 0 } // Gen 1 are pokemons from 1 - 151
 
 export function useGetPokemon(name?: string, id?: number) {

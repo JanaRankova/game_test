@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { PokemonList, useGetEveryPokemonData } from '../api'
-import { PokemonDetails } from '../types'
 import PexesoField from './Field'
 
 interface Props {

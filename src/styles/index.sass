@@ -176,6 +176,43 @@ body
 	border-radius: 8px
 	z-index: 100
 
+// Icons
+.icon
+	margin-left: 10px
+
+	&.small
+		width: 18px
+		height: 18px
+	&.normal
+		width: 24px
+		height: 24px
+	&.big
+		width: 30px
+		height: 30px
+
+	&.light
+		fill: variables.$greyWhiteText
+
+	&.dark
+		fill: variables.$blackAlmost
+
+.icon-wrapper
+	display: inline-flex
+	justify-content: center
+	align-items: center
+
+// inputs
+input[type="text"],
+input[type="search"]
+	display: inline-block
+	box-sizing: border-box
+	padding: 10px 12px
+	min-height: 40px
+	line-height: 20px
+	border: none
+	border-bottom: 1px variables.$greyWhiteText solid
+	background: variables.$greyLight
+
 a
 	font-weight: 500
 	color: variables.$spruce

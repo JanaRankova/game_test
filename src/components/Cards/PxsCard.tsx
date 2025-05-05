@@ -1,9 +1,8 @@
 import backImage from '../../assets/pokeball-16809.png'
-import errorImage from '../../assets/uknown-sprite.jfif'
 import CardContent from './CardContent'
 
 interface Props {
-	sprite: string
+	sprite: string | null
 	isFlipped: boolean
 	onCardFlip: () => void
 }
@@ -18,7 +17,7 @@ export default function PxsCard({ sprite, isFlipped, onCardFlip }: Props) {
 			/>
 			<CardContent
 				classname={`back ${isFlipped && 'flipped'}`}
-				image={sprite || errorImage}
+				image={sprite}
 				onFlip={onCardFlip}
 			/>
 		</>

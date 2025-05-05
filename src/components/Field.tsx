@@ -2,8 +2,9 @@ import RestartSvg from '../assets/icons/reload.svg?react'
 import { useState, useEffect } from 'react'
 import classNames from 'classnames'
 
-import { Player, Flip } from '../types'
+import { Flip, GameResult, isNonNullFlip } from '../types'
 import { shuffleArray } from '../utils'
+import { defaultPlayer1, defaultPlayer2, gameEndMessage } from './constants'
 
 import PxsCard from './Cards/PxsCard'
 import PlayerPanel from './Player'
@@ -12,31 +13,14 @@ interface Props {
 	allPokemons: PokemonDetails[]
 }
 
-const defaultPlayer1: Player = {
-	id: 0,
-	name: 'Player 1',
-	matchedCards: [],
-	isActive: true,
-	gamesWon: 0,
-}
-const defaultPlayer2: Player = {
-	id: 1,
-	name: 'Player 2',
-	matchedCards: [],
-	isActive: false,
-	gamesWon: 0,
-}
+const emptyCard: Flip = [null, null]
 
 export default function PexesoField({ allPokemons }: Props) {
 	const [shuffledCards, setShuffledCards] = useState<number[]>([])
-	const emptyCard: Flip = [null, null]
 	const [cardOne, setCardOne] = useState<Flip>(emptyCard)
 	const [cardTwo, setCardTwo] = useState<Flip>(emptyCard)
 	const [playerOne, setPlayerOne] = useState<Player>(defaultPlayer1)
 	const [playerTwo, setPlayerTwo] = useState<Player>(defaultPlayer2)
-	const [isPlayerOneActive, setIsPlayerOneActive] = useState(
-		playerOne.isActive,
-	)
 	const [processing, setProcessing] = useState(false)
 	const [matched, setMatched] = useState<number[]>([])
 	const [turnCount, setTurnCount] = useState(1)
@@ -82,21 +66,20 @@ export default function PexesoField({ allPokemons }: Props) {
 	}
 
 	const calculate = (firstCard: Flip, secondCard: Flip) => {
-		console.log('card check', firstCard[1], secondCard[1])
-
-		if (firstCard[1] === secondCard[1]) {
-			// FIXME: Type check for indexes
-			console.log('i am matched')
-
+		if (
+			isNonNullFlip(firstCard) &&
+			isNonNullFlip(secondCard) &&
+			firstCard[1] === secondCard[1]
+		) {
 			setMatched([...matched, firstCard[0], secondCard[0]])
-			if (isPlayerOneActive) {
+			if (playerOne.isActive) {
 				setPlayerOne({
 					...playerOne,
 					matchedCards: [
 						...playerOne.matchedCards,
 						allPokemons[firstCard[1]],
 					],
-				}) // FIXME: Type check for indexes
+				})
 			} else {
 				setPlayerTwo({
 					...playerTwo,
@@ -107,12 +90,13 @@ export default function PexesoField({ allPokemons }: Props) {
 				})
 			}
 		} else {
-			console.log('reset player')
-			setIsPlayerOneActive(!isPlayerOneActive)
+			setPlayerTwo((prev) => ({ ...prev, isActive: !prev.isActive }))
+			setPlayerOne((prev) => ({ ...prev, isActive: !prev.isActive }))
 		}
 	}
 
-	const isGameEnd = (matched: number[], cardsCount = 16) => {
+	// TODO: Change back to 16
+	const isGameEnd = (matched: number[], cardsCount = 4) => {
 		return cardsCount === matched.length
 	}
 
@@ -125,42 +109,65 @@ export default function PexesoField({ allPokemons }: Props) {
 		}, 1500)
 	}
 
-	const getWinner = (playerFirst: Player, playerSecond: Player): string => {
-		if (
-			playerFirst.matchedCards.length === playerSecond.matchedCards.length
-		) {
-			return `It's a tie!`
-		} else if (
-			playerFirst.matchedCards.length > playerSecond.matchedCards.length
-		) {
-			setPlayerOne((prev) => ({ ...prev, gamesWon: ++prev.gamesWon }))
-			return `Winner is ${playerFirst.name}!`
-		} else {
-			setPlayerTwo((prev) => ({ ...prev, gamesWon: ++prev.gamesWon }))
-			return `Winner is ${playerSecond.name}!`
-		}
+	const getWinner = (
+		playerFirst: Player,
+		playerSecond: Player,
+	): GameResult => {
+		const firstScore = playerFirst.matchedCards.length
+		const secondScore = playerSecond.matchedCards.length
+
+		if (firstScore === secondScore) return 0
+
+		return firstScore > secondScore ? 1 : 2
 	}
 
 	const resetGame = () => {
-		// Winner is the first on turn
-		/* if (getWinner(playerOne, playerTwo) === playerOne.name) {
+		// Winner is the first on turn unless it's tie, then pick from players
+		// randomly.
+		const winner = getWinner(playerOne, playerTwo)
+		if (winner === 0) {
+			const firstStarts = Math.random() < 0.5
 			setPlayerOne((prev) => ({
 				...prev,
-				gamesWon: ++prev.gamesWon,
+				gamesWon: prev.gamesWon + 1,
+				isActive: firstStarts,
 			}))
-			setIsPlayerOneActive(true)
+			setPlayerTwo((prev) => ({
+				...prev,
+				gamesWon: prev.gamesWon + 1,
+				isActive: !firstStarts,
+			}))
+		} else if (winner === 1) {
+			setPlayerOne((prev) => ({
+				...prev,
+				gamesWon: prev.gamesWon + 1,
+				isActive: true,
+			}))
 		} else {
 			setPlayerTwo((prev) => ({
 				...prev,
-				gamesWon: ++prev.gamesWon,
+				gamesWon: prev.gamesWon + 1,
+				isActive: true,
 			}))
-			setIsPlayerOneActive(false)
-		} */
-		// setPlayerOne((prev) => ({ ...prev, matchedCards: [] }))
-		// setPlayerTwo((prev) => ({ ...prev, matchedCards: [] }))
-		getNewDeck()
+		}
+		setPlayerOne((prev) => ({ ...prev, matchedCards: [] }))
+		setPlayerTwo((prev) => ({ ...prev, matchedCards: [] }))
 		setMatched([])
 		setTurnCount(0)
+		getNewDeck()
+	}
+
+	const getEndMessage = () => {
+		const winner = getWinner(playerOne, playerTwo)
+
+		if (!winner) {
+			return gameEndMessage(winner, '')
+		}
+
+		return gameEndMessage(
+			winner,
+			winner === 1 ? playerOne.name : playerTwo.name,
+		)
 	}
 
 	return (
@@ -169,7 +176,7 @@ export default function PexesoField({ allPokemons }: Props) {
 			<div className="field-wrap">
 				<div>
 					<p>TURN {turnCount}</p>
-					<p>{`Player <${isPlayerOneActive ? playerOne.name : defaultPlayer2.name}>`}</p>
+					<p>{`Player <${playerOne.isActive ? playerOne.name : defaultPlayer2.name}>`}</p>
 				</div>
 				<div className="psx-field">
 					<div className="pexeso">
@@ -191,31 +198,27 @@ export default function PexesoField({ allPokemons }: Props) {
 								</div>
 							))}
 					</div>
-					{
-						/* isGameEnd(matched) */ true && (
-							<div className="game-end-screen">
-								<div>
-									<h4 className="bold">Game over</h4>
-									<h3 className="winner">
-										{getWinner(playerOne, playerTwo)}
-									</h3>
-									<div>Game ended after # {turnCount}.</div>
-									<button onClick={resetGame} title="Restart game">
-										<span>
-											Restart game
-											<RestartSvg
-												className={classNames(
-													'icon',
-													'normal',
-													'light',
-												)}
-											/>
-										</span>
-									</button>
-								</div>
+					{isGameEnd(matched) && (
+						<div className="game-end-screen">
+							<div>
+								<h4 className="bold">Game over</h4>
+								<h3 className="winner">{getEndMessage()}</h3>
+								<div>Game ended after # {turnCount}.</div>
+								<button onClick={resetGame} title="Restart game">
+									<span>
+										Restart game
+										<RestartSvg
+											className={classNames(
+												'icon',
+												'normal',
+												'light',
+											)}
+										/>
+									</span>
+								</button>
 							</div>
-						)
-					}
+						</div>
+					)}
 				</div>
 			</div>
 			<PlayerPanel player={playerTwo} />

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { isDetailedPokemon } from '../types'
 import { PokemonList, useGetEveryPokemonData } from '../api'
 import PexesoField from './Field'
 
@@ -10,21 +11,6 @@ export default function Content({ allPokemonList }: Props) {
 	const pokemonDetailedQueries = useGetEveryPokemonData(allPokemonList)
 	const allLoaded = pokemonDetailedQueries.every((query) => query.data)
 	const [detailedList, setDetailedList] = useState<PokemonDetails[]>()
-
-	const isDetailedPokemon = (value: unknown): value is PokemonDetails => {
-		return (
-			typeof value === 'object' &&
-			value !== null &&
-			'name' in value &&
-			'id' in value &&
-			'spriteBack' in value &&
-			'spriteFront' in value &&
-			typeof (value as PokemonDetails).name === 'string' &&
-			typeof (value as PokemonDetails).id === 'number' &&
-			typeof (value as PokemonDetails).spriteBack === 'string' &&
-			typeof (value as PokemonDetails).spriteFront === 'string'
-		)
-	}
 
 	useEffect(() => {
 		setDetailedList(

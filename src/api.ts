@@ -57,7 +57,7 @@ export function useGetEveryPokemonData(allPokemonListResponse: PokemonList) {
 
 							return response.json()
 						},
-						select: (pokemon: Pokemon) => ({
+						select: (pokemon: Pokemon): PokemonDetails => ({
 							id: pokemon.id,
 							name: pokemon.name,
 							spriteFront: pokemon.sprites.front_default,

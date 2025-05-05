@@ -1,10 +1,10 @@
 import CheckmarkSvg from '../assets/icons/checkmark.svg?react'
 import EditSvg from '../assets/icons/edit.svg?react'
 import { useState } from 'react'
+import classNames from 'classnames'
 
 import CardContent from './Cards/CardContent'
 import Input from './Input'
-import { Player } from '../types'
 
 interface Props {
 	player: Player
@@ -13,9 +13,14 @@ interface Props {
 export default function PlayerPanel({ player }: Props) {
 	const [isEditing, setIsEditing] = useState(false)
 	const [name, setName] = useState(player.name)
+	console.log(player.name, player.isActive)
 
 	return (
-		<div className="player-panel">
+		<div
+			className={classNames('player-panel', {
+				active: player.isActive,
+			})}
+		>
 			{isEditing ? (
 				<Input
 					className="player-name-input"

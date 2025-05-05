@@ -12,8 +12,8 @@ declare module '*.svg' {
 interface PokemonDetails {
 	id: number
 	name: string
-	spriteFront: string
-	spriteBack: string
+	spriteFront: string | null
+	spriteBack: string | null
 }
 
 // TODO: how to apply this on SVG components
@@ -21,4 +21,12 @@ interface Icon {
 	size?: 'small' | 'normal' | 'big'
 	mode?: 'light' | 'dark'
 	title?: string
+}
+
+interface Player {
+	id: number
+	name: string
+	matchedCards: PokemonDetails[]
+	isActive: boolean
+	gamesWon: number
 }

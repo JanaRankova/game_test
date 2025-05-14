@@ -172,7 +172,12 @@ export default function PexesoField({ allPokemons }: Props) {
 
 	return (
 		<div className="game">
-			<PlayerPanel player={playerOne} />
+			<PlayerPanel
+				player={playerOne}
+				onPlayerNameChange={(name: string) =>
+					setPlayerOne((prev) => ({ ...prev, name: name }))
+				}
+			/>
 			<div className="field-wrap">
 				<div>
 					<p>TURN {turnCount}</p>
@@ -221,7 +226,12 @@ export default function PexesoField({ allPokemons }: Props) {
 					)}
 				</div>
 			</div>
-			<PlayerPanel player={playerTwo} />
+			<PlayerPanel
+				player={playerTwo}
+				onPlayerNameChange={(name: string) =>
+					setPlayerTwo((prev) => ({ ...prev, name: name }))
+				}
+			/>
 		</div>
 	)
 }

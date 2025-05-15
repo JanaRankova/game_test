@@ -12,8 +12,9 @@ interface Props {
 	clearable?: boolean
 	placeholder?: string
 	maxLength?: number
-	endIcon?: React.ReactNode
 	onChange: (value: string) => void
+	onAbortChange?: () => void
+	onConfirm?: () => void
 }
 
 export default function Input({
@@ -24,8 +25,9 @@ export default function Input({
 	clearable,
 	placeholder,
 	maxLength,
-	endIcon,
 	onChange,
+	onAbortChange,
+	onConfirm,
 }: Props) {
 	const inputRef = useRef<HTMLInputElement>(null)
 
@@ -34,6 +36,20 @@ export default function Input({
 			inputRef.current.focus()
 		}
 		onChange('')
+	}
+
+	const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+		if (event.key === 'Escape') {
+			if (onAbortChange) {
+				onAbortChange()
+			}
+		}
+
+		if (event.key === 'Enter') {
+			if (onConfirm) {
+				onConfirm()
+			}
+		}
 	}
 
 	const textInput = (
@@ -46,6 +62,8 @@ export default function Input({
 			placeholder={placeholder}
 			maxLength={maxLength}
 			onChange={(event) => onChange(event.target.value)}
+			onKeyDown={handleKeyDown}
+			onBlur={onAbortChange}
 		/>
 	)
 
@@ -62,7 +80,6 @@ export default function Input({
 			)}
 			{textInput}
 			<div className="text-input-icon-wrapper">
-				{endIcon}
 				{!!value && clearable && (
 					<ClearSvg
 						className={classNames(
@@ -79,9 +96,6 @@ export default function Input({
 			</div>
 		</div>
 	) : (
-		<>
-			{textInput}
-			{endIcon}
-		</>
+		textInput
 	)
 }

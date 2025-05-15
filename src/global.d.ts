@@ -16,13 +16,6 @@ interface PokemonDetails {
 	spriteBack: string | null
 }
 
-// TODO: how to apply this on SVG components
-interface Icon {
-	size?: 'small' | 'normal' | 'big'
-	mode?: 'light' | 'dark'
-	title?: string
-}
-
 interface Player {
 	id: number
 	name: string

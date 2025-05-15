@@ -15,28 +15,25 @@ export default function PlayerPanel({ player, onPlayerNameChange }: Props) {
 	const [isEditing, setIsEditing] = useState(false)
 	const [name, setName] = useState(player.name)
 	const [nameError, setNameError] = useState<string | null>(null)
-	console.log(player.name, player.isActive)
 
 	const validateName = (name: string) => {
-		const trimmedName = name.trim()
-		if (!trimmedName.length) {
+		if (!name.length) {
 			setNameError('Enter a name.')
-		} else if (trimmedName.length > 40) {
-			setNameError('Name must be shorter than 40 characters.')
-		} else if (!/^[a-zA-Z0-9_-]+$/.test(name)) {
+		} else if (!/^[a-zA-Z0-9_-]+(?: [a-zA-Z0-9_-]+)*$/.test(name)) {
 			setNameError(
-				'Input can only contain letters, digits, dashes, and underscores.',
+				'Input can only contain letters, digits, dashes, underscores, and spaces between words.',
 			)
 		} else {
-			// Clean all previous errors
 			setNameError(null)
 
 			return true
 		}
 	}
-	const handleNameChange = (newName: string) => {
-		if (validateName(newName)) {
-			onPlayerNameChange(newName)
+
+	const handleNameChange = () => {
+		if (validateName(name)) {
+			onPlayerNameChange(name)
+			setIsEditing(false)
 		}
 	}
 
@@ -53,8 +50,12 @@ export default function PlayerPanel({ player, onPlayerNameChange }: Props) {
 						value={name}
 						clearable={true}
 						name="playerName"
-						endIcon={<CheckmarkSvg className="icon small light" />}
-						onChange={handleNameChange}
+						maxLength={40}
+						onChange={setName}
+					/>
+					<CheckmarkSvg
+						className="icon small light"
+						onClick={handleNameChange}
 					/>
 					<p className="error">{nameError}</p>
 				</>

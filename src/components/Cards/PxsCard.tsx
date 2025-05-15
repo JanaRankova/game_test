@@ -1,4 +1,6 @@
 import backImage from '../../assets/pokeball-16809.png'
+
+import classNames from 'classnames'
 import CardContent from './CardContent'
 
 interface Props {
@@ -11,12 +13,16 @@ export default function PxsCard({ sprite, isFlipped, onCardFlip }: Props) {
 	return (
 		<>
 			<CardContent
-				classname={`front ${isFlipped && 'flipped'}`}
+				classname={classNames('front', {
+					flipped: isFlipped,
+				})}
 				image={backImage}
 				onFlip={onCardFlip}
 			/>
 			<CardContent
-				classname={`back ${isFlipped && 'flipped'}`}
+				classname={classNames('back', {
+					flipped: isFlipped,
+				})}
 				image={sprite}
 				onFlip={onCardFlip}
 			/>

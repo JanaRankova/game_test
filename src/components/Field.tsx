@@ -4,7 +4,7 @@ import classNames from 'classnames'
 
 import { Flip, GameResult, isNonNullFlip } from '../types'
 import { shuffleArray } from '../utils'
-import { defaultPlayer1, defaultPlayer2, gameEndMessage } from './constants'
+import { defaultPlayer1, defaultPlayer2, gameEndMessage } from '../constants'
 
 import PxsCard from './Cards/PxsCard'
 import PlayerPanel from './Player'
@@ -54,10 +54,6 @@ export default function PexesoField({ allPokemons }: Props) {
 		}
 	}
 
-	console.log('first', cardOne)
-	console.log('second', cardTwo)
-	console.log('matched', matched)
-
 	const resetTurn = () => {
 		setCardOne(emptyCard)
 		setCardTwo(emptyCard)
@@ -101,7 +97,6 @@ export default function PexesoField({ allPokemons }: Props) {
 	}
 
 	const processTurn = (first: Flip, second: Flip) => {
-		console.log('process start')
 		setProcessing(true)
 		setTimeout(() => {
 			calculate(first, second)

@@ -1,7 +1,6 @@
 import PsyduckGround from '../../assets/psyduck-ground.png'
 import PsyduckConfusion from '../../assets/psyduck-confusion.png'
 
-
 export default function DefaultFallback() {
 	return (
 		<div className="default-error">

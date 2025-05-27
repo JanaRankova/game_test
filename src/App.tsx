@@ -10,8 +10,7 @@ function App() {
 		<>
 			<div className="top">
 				<img src={pkmLogo} height="48" />
-				<div className="btn top-panel">Memory game</div>
-				{/* Not yet a btn */}
+				<div className="top-panel">Memory game</div>
 			</div>
 			<div className="content">
 				<div className="left" />

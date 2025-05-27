@@ -11,7 +11,7 @@ function App() {
 			<div className="top">
 				<img src={pkmLogo} height="48" />
 				<div className="btn top-panel">Memory game</div>
-				<div className="btn top-panel">Pokemon list</div>
+				{/* Not yet a btn */}
 			</div>
 			<div className="content">
 				<div className="left" />
@@ -26,7 +26,9 @@ function App() {
 			</div>
 			<div className="bottom">
 				<div>Showcase pokemon themed game app</div>
-				<i>Made by Jana Rankova</i>
+				<i>
+					Made by <a href="https://github.com/JanaRankova">Jana Rankova</a>
+				</i>
 			</div>
 		</>
 	)

@@ -67,16 +67,21 @@ body
 .right
 	border-left: 1px solid variables.$greyLight
 
+.default-error
+	display: flex
+	justify-content: center
+	align-items: center
+	padding: 80px 60px
+
 .loading
 	display: flex
 	flex-direction: column
-	justify-content: center
 	align-items: center
+	justify-content: center
 	padding: 20px
 
 	img
 		margin: 20px
-
 
 .main-content
 	display: flex
@@ -92,7 +97,6 @@ body
 	display: flex
 	flex-direction: row
 	justify-items: center
-	flex: 1
 	width: 100%
 
 .field-wrap
@@ -110,6 +114,7 @@ body
 	min-width: 140px
 	max-width: 200px
 	padding: 12px
+	margin: 0 12px
 	text-align: center
 	color: variables.$greyWhiteText
 	border: 2px solid variables.$greyLight
@@ -118,6 +123,9 @@ body
 	.player-name
 		padding-bottom: 6px
 		border-bottom: 1px solid variables.$greyLight
+
+		&:hover
+			background: variables.$greyLight
 
 	&.active
 		border: 2px solid variables.$activeColour
@@ -217,12 +225,14 @@ input[type="search"]
 	background: variables.$greyLight
 
 a
-	font-weight: 500
 	color: variables.$spruce
 	text-decoration: inherit
 
 	&:hover
-		color: variables.$spruce
+		text-decoration: underline
+
+	&:visited
+		color: variables.$pokemonYellowDark
 
 h1
 	font-size: 2rem
@@ -247,9 +257,11 @@ h6
 
 
 button
+	position: relative // Needed due to the fact that button on end game layer has issues with :hover, :focus states
 	border-radius: 4px
 	border: 1px solid variables.$greyLightText
 	padding: 0.6em 1.2em
+	margin: 0.8em
 	font-size: 1em
 	font-weight: 500
 	font-family: inherit
@@ -258,21 +270,30 @@ button
 	transition: border-color 0.25s
 
 	&:hover
-		border-color: variables.$greyLight
+		background: variables.$greyLight
 
 	&:focus,
 	&:focus-visible
-		outline: 4px auto -webkit-focus-ring-color
+		outline: 4px auto variables.$activeColour
 
+	span
+		display: flex
+		align-items: center
 
-@media (prefers-color-scheme: light)
-	:root
-		color: #213547
-		background-color: variables.$greyWhiteText
+@media (max-width: 768px) // Tablet devices
+	.left, .right
+		border: none
 
-	a:hover
-		color: variables.$spruce
+	.game
+		flex-direction: column
+		justify-content: center
+		align-items: center
 
-	button
-		background: variables.$spruce
-		color: variables.$greyWhiteText
+	.player-panel
+		min-height: 10vh
+		min-width: 80vw
+
+@media (max-width: 480px) // Phone devices
+	.default-error
+		flex-direction: column
+		padding: 60px 40px

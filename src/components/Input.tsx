@@ -59,6 +59,7 @@ export default function Input({
 			name={name}
 			className={className}
 			value={value}
+			autoFocus
 			placeholder={placeholder}
 			maxLength={maxLength}
 			onChange={(event) => onChange(event.target.value)}
@@ -73,6 +74,7 @@ export default function Input({
 				search: isSearch,
 			})}
 		>
+			{/* TODO: Remove search for now. It will be needed in later version. */}
 			{isSearch && (
 				<SearchSvg
 					className={classNames('icon', 'small', 'light', 'search-input')}

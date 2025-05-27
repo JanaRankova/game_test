@@ -204,7 +204,11 @@ export default function PexesoField({ allPokemons }: Props) {
 								<h4 className="bold">Game over</h4>
 								<h3 className="winner">{getEndMessage()}</h3>
 								<div>Game ended after # {turnCount}.</div>
-								<button onClick={resetGame} title="Restart game">
+								<button
+									className="button normal"
+									onClick={resetGame}
+									title="Restart game"
+								>
 									<span>
 										Restart game
 										<RestartSvg

@@ -1,4 +1,4 @@
-import errorImage from '../../assets/unknown-pokemon.jfif'
+import errorImage from '../../assets/unknown-pokemon.png'
 
 interface Props {
 	classname?: string

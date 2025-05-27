@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function Loading() {
 	const [frame, setFrame] = useState(0)
@@ -26,7 +26,7 @@ export default function Loading() {
 				width={100}
 				height={100}
 			/>
-			<div>Loading data...</div>
+			<h2>Loading Pokedex data...</h2>
 		</div>
 	)
 }

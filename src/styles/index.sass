@@ -36,9 +36,8 @@ body
 	color: variables.$greyLightText
 	border-bottom: 1px solid variables.$greyLight
 
-	.btn
-		&.top-panel
-			margin: 0 16px
+	.top-panel
+		margin: 0 16px
 
 .bottom
 	display: flex
@@ -102,7 +101,6 @@ body
 .field-wrap
 	display: flex
 	flex-direction: column
-	justify-content: center
 	align-items: center
 	margin: 0 20px
 	text-align: center
@@ -120,17 +118,25 @@ body
 	border: 2px solid variables.$greyLight
 	border-radius: 8px
 
+	&.active
+		border: 2px solid variables.$activeColour
+
 	.player-name
 		padding-bottom: 6px
+		margin-bottom: 6px
 		border-bottom: 1px solid variables.$greyLight
 
 		&:hover
 			background: variables.$greyLight
 
-	&.active
-		border: 2px solid variables.$activeColour
+	.player-cards
+		max-height: 600px
+		overflow: auto
 
-.psx-field
+		img
+			max-height: 100px
+
+.pexeso-field
 	display: flex
 	flex-direction: column
 	justify-content: center
@@ -150,7 +156,7 @@ body
 		height: 120px
 		width: 120px
 
-	.pxs_card
+	.pexeso-card
 		transition: transform 1.5s ease
 		backface-visibility: hidden
 		position: absolute
@@ -160,6 +166,10 @@ body
 		&.empty
 			background: transparent
 			border: 1px solid variables.$greyLight
+
+		img
+			width: 120px
+			height: 120px
 
 	.back
 		background: variables.$pokemonYellowDark
@@ -282,7 +292,7 @@ button
 
 @media (max-width: 768px) // Tablet devices
 	.left, .right
-		border: none
+		max-width: 10px
 
 	.game
 		flex-direction: column
@@ -292,6 +302,43 @@ button
 	.player-panel
 		min-height: 10vh
 		min-width: 80vw
+
+		.player-cards
+			display: flex
+			flex-wrap: wrap
+
+			img
+				max-height: 80px
+
+	.pexeso
+		display: grid
+		max-width: 100%
+		padding: 12px
+		grid-template-columns: 1fr 1fr 1fr 1fr
+		gap: 16px
+
+		.psx-square
+			display: flex
+			justify-content: center
+			align-items: center
+			height: 80px
+			width: 80px
+
+			.pexeso-card
+				transition: transform 1.5s ease
+				backface-visibility: hidden
+				position: absolute
+				height: 80px
+				width: 80px
+
+				&.empty
+					background: transparent
+					border: 1px solid variables.$greyLight
+
+				img
+					width: 80px
+					height: 80px
+
 
 @media (max-width: 480px) // Phone devices
 	.default-error

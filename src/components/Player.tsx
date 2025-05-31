@@ -1,9 +1,9 @@
+import errorImage from '../assets/unknown-pokemon.png'
 import CheckmarkSvg from '../assets/icons/checkmark.svg?react'
 import EditSvg from '../assets/icons/edit.svg?react'
 import { useState } from 'react'
 import classNames from 'classnames'
 
-import CardContent from './Cards/CardContent'
 import Input from './Input'
 
 interface Props {
@@ -72,7 +72,7 @@ export default function PlayerPanel({ player, onPlayerNameChange }: Props) {
 			<div>Games won: {player.gamesWon}</div>
 			<div className="player-cards">
 				{player.matchedCards.map((card) => (
-					<CardContent key={card.id} image={card.spriteFront} />
+					<img src={card.spriteFront || errorImage} key={card.id} />
 				))}
 			</div>
 		</div>

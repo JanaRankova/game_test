@@ -24,7 +24,7 @@ function App() {
 				<div className="right" />
 			</div>
 			<div className="bottom">
-				<div>Showcase pokemon themed game app</div>
+				<div>Interactive Pokémon-Themed Game - React + TypeScript</div>
 				<i>
 					Made by <a href="https://github.com/JanaRankova">Jana Rankova</a>
 				</i>

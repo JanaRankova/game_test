@@ -91,8 +91,7 @@ export default function PexesoField({ allPokemons }: Props) {
 		}
 	}
 
-	// TODO: Change back to 16
-	const isGameEnd = (matched: number[], cardsCount = 4) => {
+	const isGameEnd = (matched: number[], cardsCount = 16) => {
 		return cardsCount === matched.length
 	}
 
@@ -178,14 +177,14 @@ export default function PexesoField({ allPokemons }: Props) {
 					<p>TURN {turnCount}</p>
 					<p>{`Player <${playerOne.isActive ? playerOne.name : defaultPlayer2.name}>`}</p>
 				</div>
-				<div className="psx-field">
+				<div className="pexeso-field">
 					<div className="pexeso">
 						{allPokemons &&
 							shuffledCards &&
 							shuffledCards.map((pokeId, i) => (
-								<div className={`psx-square`} key={i}>
+								<div className="psx-square" key={i}>
 									{matched.includes(i) ? (
-										<div className="pxs_card empty" />
+										<div className="pexeso-card empty" />
 									) : (
 										<PxsCard
 											sprite={allPokemons[pokeId]?.spriteFront}
@@ -203,7 +202,7 @@ export default function PexesoField({ allPokemons }: Props) {
 							<div>
 								<h4 className="bold">Game over</h4>
 								<h3 className="winner">{getEndMessage()}</h3>
-								<div>Game ended after # {turnCount}.</div>
+								<div>Game ended after {turnCount} turns.</div>
 								<button
 									className="button normal"
 									onClick={resetGame}

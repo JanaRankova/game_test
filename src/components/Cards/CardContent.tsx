@@ -1,4 +1,5 @@
 import errorImage from '../../assets/unknown-pokemon.png'
+import classNames from 'classnames'
 
 interface Props {
 	classname?: string
@@ -6,10 +7,15 @@ interface Props {
 	onFlip?: () => void
 }
 
-export default function CardContent({ classname, image, onFlip }: Props) {
+export default function CardContent({ classname = '', image, onFlip }: Props) {
 	return (
-		<div className={`pxs_card ${classname}`} onClick={onFlip}>
-			<img src={image || errorImage} width={120} height={120} />
+		<div
+			className={classNames('pexeso-card', {
+				[classname]: !!classname,
+			})}
+			onClick={onFlip}
+		>
+			<img src={image || errorImage} />
 		</div>
 	)
 }

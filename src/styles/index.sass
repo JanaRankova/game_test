@@ -1,5 +1,11 @@
 @use 'variables'
 
+// Mixins
+@mixin flexCenter($direction: row)
+	display: flex
+	flex-direction: $direction
+	justify-content: center
+	align-items: center
 
 :root
 	font-family: variables.$baseFontFamily
@@ -7,8 +13,7 @@
 	line-height: 1.5
 	font-weight: variables.$regularFontWeight
 
-	color-scheme: light dark
-	color: rgba(255, 255, 255, 0.87)
+	color: variables.$white
 	background-color: variables.$blackAlmost
 
 	font-synthesis: none
@@ -21,10 +26,10 @@ body
 
 #root
 	display: flex
+	flex-direction: column
 	flex: 1
 	min-width: 100%
 	min-height: 100vh
-	flex-direction: column
 
 .top
 	display: flex
@@ -41,7 +46,6 @@ body
 
 .bottom
 	display: flex
-	flex-direction: row
 	justify-content: space-between
 	padding: 10px
 	background: variables.$greyBlueDark
@@ -55,39 +59,35 @@ body
 	height: 100%
 	background: variables.$greyBrown
 
-.left,.right
-	flex: 1
-	flex-shrink: 0
-	background: variables.$greyBlue
+	.left,.right
+		flex: 1
+		flex-shrink: 0
+		background: variables.$greyBlue
 
-.left
-	border-right: 1px solid variables.$greyLight
+	.left
+		border-right: 1px solid variables.$greyLight
 
-.right
-	border-left: 1px solid variables.$greyLight
+	.right
+		border-left: 1px solid variables.$greyLight
 
 .default-error
-	display: flex
-	justify-content: center
-	align-items: center
+	@include flexCenter()
 	padding: 80px 60px
 
+.error
+	margin: 5px 0
+	color: variables.$pokemonRedDark
+
 .loading
-	display: flex
-	flex-direction: column
-	align-items: center
-	justify-content: center
+	@include flexCenter($direction: column)
 	padding: 20px
 
 	img
 		margin: 20px
 
 .main-content
-	display: flex
-	flex-direction: column
+	@include flexCenter($direction: column)
 	flex: 3 1
-	justify-content: center
-	align-items: center
 	padding: 40px 0
 	width: 100%
 	height: 100%
@@ -98,12 +98,12 @@ body
 	justify-items: center
 	width: 100%
 
-.field-wrap
-	display: flex
-	flex-direction: column
-	align-items: center
-	margin: 0 20px
-	text-align: center
+	.field-wrap
+		display: flex
+		flex-direction: column
+		align-items: center
+		margin: 0 20px
+		text-align: center
 
 .player-panel
 	display: flex
@@ -125,22 +125,24 @@ body
 		padding-bottom: 6px
 		margin-bottom: 6px
 		border-bottom: 1px solid variables.$greyLight
+		overflow: hidden
 
 		&:hover
 			background: variables.$greyLight
+			color: variables.$pokemonYellow
+
+			.icon
+				fill: variables.$pokemonYellow
 
 	.player-cards
 		max-height: 600px
 		overflow: auto
 
 		img
-			max-height: 100px
+			max-height: variables.$mediumScreenImageSize
 
 .pexeso-field
-	display: flex
-	flex-direction: column
-	justify-content: center
-	align-items: center
+	@include flexCenter($direction: column)
 
 .pexeso
 	display: grid
@@ -150,26 +152,24 @@ body
 	gap: 16px
 
 	.psx-square
-		display: flex
-		justify-content: center
-		align-items: center
-		height: 120px
-		width: 120px
+		@include flexCenter()
+		height: variables.$normalScreenImageSize
+		width: variables.$normalScreenImageSize
 
 	.pexeso-card
 		transition: transform 1.5s ease
 		backface-visibility: hidden
 		position: absolute
-		height: 120px
-		width: 120px
+		height: variables.$normalScreenImageSize
+		width: variables.$normalScreenImageSize
 
 		&.empty
 			background: transparent
 			border: 1px solid variables.$greyLight
 
 		img
-			width: 120px
-			height: 120px
+			width: variables.$normalScreenImageSize
+			height: variables.$normalScreenImageSize
 
 	.back
 		background: variables.$pokemonYellowDark
@@ -186,10 +186,8 @@ body
 			transform: rotateY(180deg)
 
 .game-end-screen
+	@include flexCenter()
 	position: absolute
-	display: flex
-	justify-content: center
-	align-items: center
 	width: 480px
 	padding: 12px
 	background: variables.$greyBlue
@@ -204,9 +202,11 @@ body
 	&.small
 		width: 18px
 		height: 18px
+
 	&.normal
 		width: 24px
 		height: 24px
+
 	&.big
 		width: 30px
 		height: 30px
@@ -216,6 +216,10 @@ body
 
 	&.dark
 		fill: variables.$blackAlmost
+
+	&:hover
+		fill: variables.$pokemonYellow
+
 
 .icon-wrapper
 	display: inline-flex
@@ -233,6 +237,24 @@ input[type="search"]
 	border: none
 	border-bottom: 1px variables.$greyWhiteText solid
 	background: variables.$greyLight
+	color: variables.$greyWhiteText
+
+.clearable-input-wrapper
+	@include flexCenter()
+	position: relative
+
+	input
+		position: relative
+		width: 100%
+		padding-right: 30px // Buffer for clear icon
+		z-index: 10
+
+	.clearable-icon
+		@include flexCenter()
+		position: absolute
+		top: 8px
+		right: 0
+		z-index: 20
 
 a
 	color: variables.$spruce
@@ -290,25 +312,30 @@ button
 		display: flex
 		align-items: center
 
-@media (max-width: 768px) // Tablet devices
-	.left, .right
-		max-width: 10px
-
+// Tablet devices
+@media (max-width: 960px)
 	.game
-		flex-direction: column
-		justify-content: center
-		align-items: center
+		@include flexCenter($direction: column)
 
 	.player-panel
 		min-height: 10vh
-		min-width: 80vw
+		max-width: 60vw
+		min-width: 60vw
 
 		.player-cards
 			display: flex
 			flex-wrap: wrap
 
 			img
-				max-height: 80px
+				max-height: variables.$smallScreenImageSize
+
+// Tablet devices
+@media (max-width: 768px)
+	.left, .right
+		display: none
+
+	.player-panel
+		max-width: 80vw
 
 	.pexeso
 		display: grid
@@ -318,29 +345,19 @@ button
 		gap: 16px
 
 		.psx-square
-			display: flex
-			justify-content: center
-			align-items: center
-			height: 80px
-			width: 80px
+			height: variables.$smallScreenImageSize
+			width: variables.$smallScreenImageSize
 
 			.pexeso-card
-				transition: transform 1.5s ease
-				backface-visibility: hidden
-				position: absolute
-				height: 80px
-				width: 80px
+				height: variables.$smallScreenImageSize
+				width: variables.$smallScreenImageSize
 
-				&.empty
-					background: transparent
-					border: 1px solid variables.$greyLight
+			img
+				width: variables.$smallScreenImageSize
+				height: variables.$smallScreenImageSize
 
-				img
-					width: 80px
-					height: 80px
-
-
-@media (max-width: 480px) // Phone devices
+// Phone devices
+@media (max-width: 480px)
 	.default-error
 		flex-direction: column
 		padding: 60px 40px

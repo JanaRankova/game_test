@@ -8,7 +8,6 @@ interface Props {
 	value: string
 	name?: string
 	className?: string
-	isSearch?: boolean
 	clearable?: boolean
 	placeholder?: string
 	maxLength?: number
@@ -21,7 +20,6 @@ export default function Input({
 	value,
 	name,
 	className,
-	isSearch,
 	clearable,
 	placeholder,
 	maxLength,
@@ -68,25 +66,15 @@ export default function Input({
 		/>
 	)
 
-	return clearable || isSearch ? (
-		<div
-			className={classNames('clearable-icon-wrapper', {
-				search: isSearch,
-			})}
-		>
-			{/* TODO: Remove search for now. It will be needed in later version. */}
-			{isSearch && (
-				<SearchSvg
-					className={classNames('icon', 'small', 'light', 'search-input')}
-				/>
-			)}
+	return clearable ? (
+		<div className="clearable-input-wrapper">
 			{textInput}
-			<div className="text-input-icon-wrapper">
+			<div className="clearable-icon">
 				{!!value && clearable && (
 					<ClearSvg
 						className={classNames(
 							'icon',
-							'small',
+							'normal',
 							'light',
 							'clear-input',
 						)}

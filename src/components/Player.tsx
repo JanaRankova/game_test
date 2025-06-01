@@ -1,5 +1,4 @@
 import errorImage from '../assets/unknown-pokemon.png'
-import CheckmarkSvg from '../assets/icons/checkmark.svg?react'
 import EditSvg from '../assets/icons/edit.svg?react'
 import { useState } from 'react'
 import classNames from 'classnames'
@@ -15,6 +14,7 @@ export default function PlayerPanel({ player, onPlayerNameChange }: Props) {
 	const [isEditing, setIsEditing] = useState(false)
 	const [name, setName] = useState(player.name)
 	const [nameError, setNameError] = useState<string | null>(null)
+	let previousName = player.name
 
 	const validateName = (name: string) => {
 		if (!name.length) {
@@ -34,7 +34,14 @@ export default function PlayerPanel({ player, onPlayerNameChange }: Props) {
 		if (validateName(name)) {
 			onPlayerNameChange(name)
 			setIsEditing(false)
+			previousName = name
 		}
+	}
+
+	const handleAbortChange = () => {
+		setIsEditing(false)
+		onPlayerNameChange(previousName)
+		setName(previousName)
 	}
 
 	return (
@@ -50,12 +57,10 @@ export default function PlayerPanel({ player, onPlayerNameChange }: Props) {
 						value={name}
 						clearable={true}
 						name="playerName"
-						maxLength={40}
+						maxLength={12}
+						onConfirm={handleNameChange}
+						onAbortChange={handleAbortChange}
 						onChange={setName}
-					/>
-					<CheckmarkSvg
-						className="icon small light"
-						onClick={handleNameChange}
 					/>
 					<p className="error">{nameError}</p>
 				</>

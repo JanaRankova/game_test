@@ -1,10 +1,16 @@
 import { useGetAllPokemons } from './api'
 import Content from './components/Content'
 import Loading from './components/Loading'
+import DefaultFallback from './components/ErrorHandling/DefaultFallback'
 import pkmLogo from './assets/pokemon-logo-png-file-pokemon-logo-png-500.png'
 
 function App() {
-	const { isLoading, data: allPokemonList, isError } = useGetAllPokemons()
+	const {
+		isLoading,
+		data: allPokemonList,
+		isError,
+		error,
+	} = useGetAllPokemons()
 
 	return (
 		<>
@@ -16,7 +22,7 @@ function App() {
 				<div className="left" />
 				<div className="main-content">
 					{isLoading && <Loading />}
-					{isError && <div className="error">Error</div>}
+					{isError && <DefaultFallback error={error as string} />}
 					{allPokemonList?.results && (
 						<Content allPokemonList={allPokemonList?.results} />
 					)}

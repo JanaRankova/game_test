@@ -1,11 +1,5 @@
 @use 'variables'
-
-// Mixins
-@mixin flexCenter($direction: row)
-	display: flex
-	flex-direction: $direction
-	justify-content: center
-	align-items: center
+@use 'mixins'
 
 :root
 	font-family: variables.$baseFontFamily
@@ -70,23 +64,8 @@ body
 	.right
 		border-left: 1px solid variables.$greyLight
 
-.default-error
-	@include flexCenter()
-	padding: 80px 60px
-
-.error
-	margin: 5px 0
-	color: variables.$pokemonRedDark
-
-.loading
-	@include flexCenter($direction: column)
-	padding: 20px
-
-	img
-		margin: 20px
-
 .main-content
-	@include flexCenter($direction: column)
+	@include mixins.flexCenter($direction: column)
 	flex: 3 1
 	padding: 40px 0
 	width: 100%
@@ -105,88 +84,23 @@ body
 		margin: 0 20px
 		text-align: center
 
-.player-panel
-	display: flex
-	flex-direction: column
-	width: 100%
-	min-width: 140px
-	max-width: 200px
-	padding: 12px
-	margin: 0 12px
-	text-align: center
-	color: variables.$greyWhiteText
-	border: 2px solid variables.$greyLight
-	border-radius: 8px
+		.pexeso-field
+			@include mixins.flexCenter($direction: column)
 
-	&.active
-		border: 2px solid variables.$activeColour
+			.pexeso
+				display: grid
+				max-width: 720px
+				padding: 12px
+				grid-template-columns: 1fr 1fr 1fr 1fr
+				gap: 16px
 
-	.player-name
-		padding-bottom: 6px
-		margin-bottom: 6px
-		border-bottom: 1px solid variables.$greyLight
-		overflow: hidden
-
-		&:hover
-			background: variables.$greyLight
-			color: variables.$pokemonYellow
-
-			.icon
-				fill: variables.$pokemonYellow
-
-	.player-cards
-		max-height: 600px
-		overflow: auto
-
-		img
-			max-height: variables.$mediumScreenImageSize
-
-.pexeso-field
-	@include flexCenter($direction: column)
-
-.pexeso
-	display: grid
-	max-width: 720px
-	padding: 12px
-	grid-template-columns: 1fr 1fr 1fr 1fr
-	gap: 16px
-
-	.psx-square
-		@include flexCenter()
-		height: variables.$normalScreenImageSize
-		width: variables.$normalScreenImageSize
-
-	.pexeso-card
-		transition: transform 1.5s ease
-		backface-visibility: hidden
-		position: absolute
-		height: variables.$normalScreenImageSize
-		width: variables.$normalScreenImageSize
-
-		&.empty
-			background: transparent
-			border: 1px solid variables.$greyLight
-
-		img
-			width: variables.$normalScreenImageSize
-			height: variables.$normalScreenImageSize
-
-	.back
-		background: variables.$pokemonYellowDark
-		transform: rotateY(180deg)
-
-		&.flipped
-			transform: rotateY(0deg)
-
-	.front
-		background: variables.$pokemonBlue
-		transform: rotateY(0deg)
-
-		&.flipped
-			transform: rotateY(180deg)
+				.psx-square
+					@include mixins.flexCenter()
+					height: variables.$normalScreenImageSize
+					width: variables.$normalScreenImageSize
 
 .game-end-screen
-	@include flexCenter()
+	@include mixins.flexCenter()
 	position: absolute
 	width: 480px
 	padding: 12px
@@ -195,21 +109,35 @@ body
 	border-radius: 8px
 	z-index: 100
 
+// Loading and errors
+.default-error
+	@include mixins.flexCenter()
+	padding: 80px 60px
+
+.error
+	margin: 5px 0
+	color: variables.$pokemonRedDark
+
+.loading
+	@include mixins.flexCenter($direction: column)
+	padding: 20px
+
+	img
+		margin: 20px
+
+
 // Icons
 .icon
 	margin-left: 10px
 
 	&.small
-		width: 18px
-		height: 18px
+		@include mixins.square(18px)
 
 	&.normal
-		width: 24px
-		height: 24px
+		@include mixins.square(24px)
 
 	&.big
-		width: 30px
-		height: 30px
+		@include mixins.square(30px)
 
 	&.light
 		fill: variables.$greyWhiteText
@@ -218,44 +146,9 @@ body
 		fill: variables.$blackAlmost
 
 	&:hover
-		fill: variables.$pokemonYellow
+		fill: variables.$activeColour
 
-
-.icon-wrapper
-	display: inline-flex
-	justify-content: center
-	align-items: center
-
-// inputs
-input[type="text"],
-input[type="search"]
-	display: inline-block
-	box-sizing: border-box
-	padding: 10px 12px
-	min-height: 40px
-	line-height: 20px
-	border: none
-	border-bottom: 1px variables.$greyWhiteText solid
-	background: variables.$greyLight
-	color: variables.$greyWhiteText
-
-.clearable-input-wrapper
-	@include flexCenter()
-	position: relative
-
-	input
-		position: relative
-		width: 100%
-		padding-right: 30px // Buffer for clear icon
-		z-index: 10
-
-	.clearable-icon
-		@include flexCenter()
-		position: absolute
-		top: 8px
-		right: 0
-		z-index: 20
-
+// Common tags and classes
 a
 	color: variables.$spruce
 	text-decoration: inherit
@@ -287,7 +180,6 @@ h6
 .bold
 	font-weight: variables.$mediumFontWeight
 
-
 button
 	position: relative // Needed due to the fact that button on end game layer has issues with :hover, :focus states
 	border-radius: 4px
@@ -298,11 +190,17 @@ button
 	font-weight: 500
 	font-family: inherit
 	background-color: variables.$greyBlue
+	color: variables.$greyWhiteText
 	cursor: pointer
 	transition: border-color 0.25s
 
 	&:hover
 		background: variables.$greyLight
+		color: variables.$activeColour
+		border: 1px solid variables.$activeColour
+
+		.icon
+			fill: variables.$activeColour
 
 	&:focus,
 	&:focus-visible
@@ -312,22 +210,11 @@ button
 		display: flex
 		align-items: center
 
-// Tablet devices
+
+// Smaller screens
 @media (max-width: 960px)
 	.game
-		@include flexCenter($direction: column)
-
-	.player-panel
-		min-height: 10vh
-		max-width: 60vw
-		min-width: 60vw
-
-		.player-cards
-			display: flex
-			flex-wrap: wrap
-
-			img
-				max-height: variables.$smallScreenImageSize
+		@include mixins.flexCenter($direction: column)
 
 // Tablet devices
 @media (max-width: 768px)
@@ -345,16 +232,10 @@ button
 		gap: 16px
 
 		.psx-square
-			height: variables.$smallScreenImageSize
-			width: variables.$smallScreenImageSize
+			@include mixins.square(variables.$smallScreenImageSize)
 
-			.pexeso-card
-				height: variables.$smallScreenImageSize
-				width: variables.$smallScreenImageSize
-
-			img
-				width: variables.$smallScreenImageSize
-				height: variables.$smallScreenImageSize
+	.game-end-screen
+		max-width: 80vw
 
 // Phone devices
 @media (max-width: 480px)

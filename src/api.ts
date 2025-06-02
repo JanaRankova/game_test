@@ -6,7 +6,7 @@ interface AllPokResponse {
 	results: PokemonList
 }
 
-const gen1 = { limit: 150, offset: 0 } // Gen 1 are pokemons from 1 - 151
+const gen1 = { limit: 150, offset: 0 } // Gen 1 is from 1 - 151
 
 export function useGetPokemon(name?: string, id?: number) {
 	return useQuery<Pokemon>({

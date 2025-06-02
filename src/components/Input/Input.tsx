@@ -1,5 +1,5 @@
-import ClearSvg from '../assets/icons/cross.svg?react'
-import SearchSvg from '../assets/icons/search.svg?react'
+import './input.sass'
+import ClearSvg from '../../assets/icons/cross.svg?react'
 
 import classNames from 'classnames'
 import { useRef } from 'react'
@@ -62,7 +62,7 @@ export default function Input({
 			maxLength={maxLength}
 			onChange={(event) => onChange(event.target.value)}
 			onKeyDown={handleKeyDown}
-			onBlur={onAbortChange}
+			//onBlur={onAbortChange}
 		/>
 	)
 

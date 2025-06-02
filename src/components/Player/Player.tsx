@@ -1,9 +1,11 @@
-import errorImage from '../assets/unknown-pokemon.png'
-import EditSvg from '../assets/icons/edit.svg?react'
+import './player.sass'
+import errorImage from '../../assets/unknown-pokemon.png'
+import EditSvg from '../../assets/icons/edit.svg?react'
+
 import { useState } from 'react'
 import classNames from 'classnames'
 
-import Input from './Input'
+import Input from '../Input/Input'
 
 interface Props {
 	player: Player
@@ -53,20 +55,19 @@ export default function PlayerPanel({ player, onPlayerNameChange }: Props) {
 			{isEditing ? (
 				<>
 					<Input
-						className="player-name-input"
 						value={name}
 						clearable={true}
-						name="playerName"
+						name="playerNameInput"
 						maxLength={12}
 						onConfirm={handleNameChange}
 						onAbortChange={handleAbortChange}
 						onChange={setName}
 					/>
-					<p className="error">{nameError}</p>
+					{nameError && <p className="error">{nameError}</p>}
 				</>
 			) : (
 				<div
-					className="player-name icon-wrapper"
+					className="player-name"
 					title="Edit player name"
 					onClick={() => setIsEditing(true)}
 				>

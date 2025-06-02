@@ -1,13 +1,12 @@
-import RestartSvg from '../assets/icons/reload.svg?react'
 import { useState, useEffect } from 'react'
-import classNames from 'classnames'
 
 import { Flip, GameResult, isNonNullFlip } from '../types'
 import { shuffleArray } from '../utils'
 import { defaultPlayer1, defaultPlayer2, gameEndMessage } from '../constants'
 
-import PxsCard from './Cards/PxsCard'
-import PlayerPanel from './Player'
+import PxsCard from './Card/Card'
+import PlayerPanel from './Player/Player'
+import GameEndScreen from './GameEndScreen'
 
 interface Props {
 	allPokemons: PokemonDetails[]
@@ -198,29 +197,11 @@ export default function PexesoField({ allPokemons }: Props) {
 							))}
 					</div>
 					{isGameEnd(matched) && (
-						<div className="game-end-screen">
-							<div>
-								<h4 className="bold">Game over</h4>
-								<h3 className="winner">{getEndMessage()}</h3>
-								<div>Game ended after {turnCount} turns.</div>
-								<button
-									className="button normal"
-									onClick={resetGame}
-									title="Restart game"
-								>
-									<span>
-										Restart game
-										<RestartSvg
-											className={classNames(
-												'icon',
-												'normal',
-												'light',
-											)}
-										/>
-									</span>
-								</button>
-							</div>
-						</div>
+						<GameEndScreen
+							message={getEndMessage()}
+							turnCount={turnCount}
+							onGameReset={resetGame}
+						/>
 					)}
 				</div>
 			</div>

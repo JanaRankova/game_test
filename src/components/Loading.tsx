@@ -26,7 +26,7 @@ export default function Loading() {
 				width={100}
 				height={100}
 			/>
-			<h2>Loading Pokedex data...</h2>
+			<h3>Loading Pokedex data...</h3>
 		</div>
 	)
 }

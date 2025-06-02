@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { isDetailedPokemon } from '../types'
 import { PokemonList, useGetEveryPokemonData } from '../api'
-import PexesoField from './Field'
+import Game from './Game'
 
 interface Props {
 	allPokemonList: PokemonList
@@ -22,9 +22,7 @@ export default function Content({ allPokemonList }: Props) {
 
 	return (
 		<div>
-			{allLoaded && detailedList && (
-				<PexesoField allPokemons={detailedList} />
-			)}
+			{allLoaded && detailedList && <Game allPokemons={detailedList} />}
 		</div>
 	)
 }

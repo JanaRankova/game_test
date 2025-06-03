@@ -1,32 +1,15 @@
 import { useQuery, useQueries, UseQueryResult } from 'react-query'
 import { Pokemon } from 'pokenode-ts'
+import { PokemonDetails, PokemonListItem } from './types'
 
-export type PokemonList = { name: string; url: string }[]
-interface AllPokResponse {
-	results: PokemonList
+interface AllPokemonResponse {
+	results: PokemonListItem[]
 }
 
 const gen1 = { limit: 150, offset: 0 } // Gen 1 is from 1 - 151
 
-export function useGetPokemon(name?: string, id?: number) {
-	return useQuery<Pokemon>({
-		queryKey: ['pokemon', name, id],
-		queryFn: async () => {
-			const response = await fetch(
-				`https://pokeapi.co/api/v2/ability/${name || id}/`,
-			)
-
-			if (!response.ok) {
-				throw new Error('Error while fetching pokemon data.')
-			}
-
-			return response.json()
-		},
-	})
-}
-
 export function useGetAllPokemons() {
-	return useQuery<AllPokResponse>({
+	return useQuery<AllPokemonResponse>({
 		queryKey: ['pokemon'],
 		queryFn: async () => {
 			const response = await fetch(
@@ -42,7 +25,9 @@ export function useGetAllPokemons() {
 	})
 }
 
-export function useGetEveryPokemonData(allPokemonListResponse: PokemonList) {
+export function useGetEveryPokemonData(
+	allPokemonListResponse: PokemonListItem[],
+) {
 	return useQueries(
 		allPokemonListResponse
 			? allPokemonListResponse.map((listedPokemon) => {
@@ -52,7 +37,9 @@ export function useGetEveryPokemonData(allPokemonListResponse: PokemonList) {
 							const response = await fetch(listedPokemon.url)
 
 							if (!response.ok) {
-								throw new Error('Error while fetching pokemon data.')
+								throw new Error(
+									'Error while fetching all detailed pokemon data.',
+								)
 							}
 
 							return response.json()

@@ -6,6 +6,7 @@ import { useState } from 'react'
 import classNames from 'classnames'
 
 import Input from '../Input/Input'
+import { Player } from '../../types'
 
 interface Props {
 	player: Player

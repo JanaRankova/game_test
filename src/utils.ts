@@ -13,3 +13,15 @@ export function shuffleArray<T>(array: T[]): T[] {
 
 	return copy
 }
+
+export const getNewDeck = (): number[] => {
+	const numbers: number[] = []
+	for (let index = 0; numbers.length < 16; index++) {
+		const random = Math.floor(Math.random() * 151)
+		if (!numbers.includes(random)) {
+			numbers.push(random)
+			numbers.push(random)
+		}
+	}
+	return shuffleArray(numbers)
+}

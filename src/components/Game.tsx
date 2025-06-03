@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 
-import { Flip, GameResult, isNonNullFlip } from '../types'
-import { shuffleArray } from '../utils'
-import { defaultPlayer1, defaultPlayer2, gameEndMessage } from '../constants'
+import { Flip, Player, PokemonDetails, isNonNullFlip } from '../types'
+import { getNewDeck } from '../utils'
+import { defaultPlayer1, defaultPlayer2 } from '../constants'
 
 import PxsCard from './Card/Card'
 import PlayerPanel from './Player/Player'
@@ -15,7 +15,7 @@ interface Props {
 const emptyCard: Flip = [null, null]
 
 export default function PexesoField({ allPokemons }: Props) {
-	const [shuffledCards, setShuffledCards] = useState<number[]>([])
+	const [shuffledCards, setShuffledCards] = useState(getNewDeck())
 	const [cardOne, setCardOne] = useState<Flip>(emptyCard)
 	const [cardTwo, setCardTwo] = useState<Flip>(emptyCard)
 	const [playerOne, setPlayerOne] = useState<Player>(defaultPlayer1)
@@ -23,24 +23,10 @@ export default function PexesoField({ allPokemons }: Props) {
 	const [processing, setProcessing] = useState(false)
 	const [matched, setMatched] = useState<number[]>([])
 	const [turnCount, setTurnCount] = useState(1)
-
-	const getNewDeck = () => {
-		const numbers: number[] = []
-		for (let index = 0; numbers.length < 16; index++) {
-			const random = Math.floor(Math.random() * 151)
-			if (!numbers.includes(random)) {
-				numbers.push(random)
-				numbers.push(random)
-			}
-		}
-		setShuffledCards(shuffleArray(numbers))
-	}
-
-	useEffect(() => {
-		getNewDeck()
-	}, [])
+	const cardsSum = 16
 
 	const handleCardFlip = (index: number, id: number) => {
+		// Forbid card flip while processing the previous turn
 		if (processing) {
 			return
 		}
@@ -60,7 +46,7 @@ export default function PexesoField({ allPokemons }: Props) {
 		setTurnCount(turnCount + 1)
 	}
 
-	const calculate = (firstCard: Flip, secondCard: Flip) => {
+	const calculateTurn = (firstCard: Flip, secondCard: Flip) => {
 		if (
 			isNonNullFlip(firstCard) &&
 			isNonNullFlip(secondCard) &&
@@ -85,19 +71,16 @@ export default function PexesoField({ allPokemons }: Props) {
 				})
 			}
 		} else {
+			// Switch players after a turn with no match
 			setPlayerTwo((prev) => ({ ...prev, isActive: !prev.isActive }))
 			setPlayerOne((prev) => ({ ...prev, isActive: !prev.isActive }))
 		}
 	}
 
-	const isGameEnd = (matched: number[], cardsCount = 16) => {
-		return cardsCount === matched.length
-	}
-
 	const processTurn = (first: Flip, second: Flip) => {
 		setProcessing(true)
 		setTimeout(() => {
-			calculate(first, second)
+			calculateTurn(first, second)
 			resetTurn()
 		}, 1500)
 	}
@@ -105,20 +88,20 @@ export default function PexesoField({ allPokemons }: Props) {
 	const getWinner = (
 		playerFirst: Player,
 		playerSecond: Player,
-	): GameResult => {
+	): string | undefined => {
 		const firstScore = playerFirst.matchedCards.length
 		const secondScore = playerSecond.matchedCards.length
 
-		if (firstScore === secondScore) return 0
+		// No one won, it's a tie
+		if (firstScore === secondScore) return
 
-		return firstScore > secondScore ? 1 : 2
+		return firstScore > secondScore ? playerFirst.name : playerTwo.name
 	}
 
 	const resetGame = () => {
-		// Winner is the first on turn unless it's tie, then pick from players
-		// randomly.
+		// Winner is the first on turn unless it's a tie - then pick player randomly.
 		const winner = getWinner(playerOne, playerTwo)
-		if (winner === 0) {
+		if (!winner) {
 			const firstStarts = Math.random() < 0.5
 			setPlayerOne((prev) => ({
 				...prev,
@@ -130,7 +113,7 @@ export default function PexesoField({ allPokemons }: Props) {
 				gamesWon: prev.gamesWon + 1,
 				isActive: !firstStarts,
 			}))
-		} else if (winner === 1) {
+		} else if (winner === playerOne.name) {
 			setPlayerOne((prev) => ({
 				...prev,
 				gamesWon: prev.gamesWon + 1,
@@ -147,20 +130,7 @@ export default function PexesoField({ allPokemons }: Props) {
 		setPlayerTwo((prev) => ({ ...prev, matchedCards: [] }))
 		setMatched([])
 		setTurnCount(0)
-		getNewDeck()
-	}
-
-	const getEndMessage = () => {
-		const winner = getWinner(playerOne, playerTwo)
-
-		if (!winner) {
-			return gameEndMessage(winner, '')
-		}
-
-		return gameEndMessage(
-			winner,
-			winner === 1 ? playerOne.name : playerTwo.name,
-		)
+		setShuffledCards(getNewDeck())
 	}
 
 	return (
@@ -196,9 +166,9 @@ export default function PexesoField({ allPokemons }: Props) {
 								</div>
 							))}
 					</div>
-					{isGameEnd(matched) && (
+					{cardsSum === matched.length && (
 						<GameEndScreen
-							message={getEndMessage()}
+							winner={getWinner(playerOne, playerTwo)}
 							turnCount={turnCount}
 							onGameReset={resetGame}
 						/>

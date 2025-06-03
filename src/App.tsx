@@ -1,8 +1,9 @@
-import { useGetAllPokemons } from './api'
-import Content from './components/Content'
-import Loading from './components/Loading'
-import DefaultFallback from './components/ErrorHandling/DefaultFallback'
 import pkmLogo from './assets/pokemon-logo-png-file-pokemon-logo-png-500.png'
+import { useGetAllPokemons, useGetEveryPokemonData } from './api'
+import { isDetailedPokemon, isPokemonListItem } from './types'
+import DefaultFallback from './components/ErrorHandling/DefaultFallback'
+import Game from './components/Game'
+import Loading from './components/Loading'
 
 function App() {
 	const {
@@ -11,6 +12,23 @@ function App() {
 		isError,
 		error,
 	} = useGetAllPokemons()
+
+	const allPokemonListResult = allPokemonList?.results?.every(
+		isPokemonListItem,
+	)
+		? allPokemonList.results
+		: []
+
+	const pokemonDetailedQueries = useGetEveryPokemonData(allPokemonListResult)
+	const allLoaded =
+		!!pokemonDetailedQueries.length &&
+		pokemonDetailedQueries.every((query) => query.isSuccess)
+
+	const detailedList = allLoaded
+		? pokemonDetailedQueries
+				.map((query) => query.data)
+				.filter(isDetailedPokemon)
+		: []
 
 	return (
 		<>
@@ -21,10 +39,13 @@ function App() {
 			<div className="content">
 				<div className="left" />
 				<div className="main-content">
-					{isLoading && <Loading />}
-					{isError && <DefaultFallback error={error as string} />}
-					{allPokemonList?.results && (
-						<Content allPokemonList={allPokemonList?.results} />
+					{isLoading ? (
+						<Loading />
+					) : isError ? (
+						<DefaultFallback error={error as string} />
+					) : (
+						allLoaded &&
+						detailedList && <Game allPokemons={detailedList} />
 					)}
 				</div>
 				<div className="right" />

@@ -1,4 +1,4 @@
-/** Fisher-Yates Shuffle Algorithm */
+/* Fisher-Yates Shuffle Algorithm */
 export function shuffleArray<T>(array: T[]): T[] {
 	let oldItem
 	const copy = [...array]
@@ -14,6 +14,10 @@ export function shuffleArray<T>(array: T[]): T[] {
 	return copy
 }
 
+/*
+	Get 8 pairs of random numbers ranging from 1 to 151 that stand for
+	pokemon id from the first gen. Shuffle it to create a deck for the game.
+*/
 export const getNewDeck = (): number[] => {
 	const numbers: number[] = []
 	for (let index = 0; numbers.length < 16; index++) {

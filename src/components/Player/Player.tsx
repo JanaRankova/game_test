@@ -57,6 +57,7 @@ export default function PlayerPanel({ player, onPlayerNameChange }: Props) {
 				<>
 					<Input
 						value={name}
+						data-testid="player.name.input"
 						clearable={true}
 						name="playerNameInput"
 						maxLength={12}

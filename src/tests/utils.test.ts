@@ -1,8 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { shuffleArray, getNewDeck } from '../utils'
 
-describe('shuffleArray', () => {})
-
 describe('getNewDeck', () => {
 	it('Basic type check and deck has 16 cards', () => {
 		const deck = getNewDeck()
@@ -40,12 +38,36 @@ describe('shuffleArray', () => {
 		const shuffled = shuffleArray(emptyArray)
 
 		expect(shuffled).toBeTypeOf('object')
-		expect(shuffled.length).toEqual(0)
+		expect(shuffled.length).toEqual(emptyArray.length)
 	})
 
-	it('Type and behaviour with empty array', () => {
+	it('Length of the shuffled array stays the same', () => {
 		const shuffled = shuffleArray(testArray)
 
-		expect(shuffled.length).toEqual(5)
+		expect(shuffled.length).toEqual(testArray.length)
+	})
+
+	it('Original array is not mutated', () => {
+		const copy = [...testArray]
+		shuffleArray(testArray)
+
+		expect(testArray).toEqual(copy)
+	})
+
+	it('Gets different order of array items', () => {
+		let isShuffled = false
+
+		// Run multiple times to minimize chance of randomly getting the same array
+		for (let i = 0; i < 5; i++) {
+			const shuffled = shuffleArray(testArray)
+
+			if (shuffled.some((number, index) => number !== testArray[index])) {
+				isShuffled = true
+
+				break
+			}
+		}
+
+		expect(isShuffled).toBeTruthy()
 	})
 })

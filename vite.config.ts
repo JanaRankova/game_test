@@ -7,6 +7,6 @@ export default defineConfig({
 	plugins: [react(), svgr()],
 	test: {
 		globals: true,
-		environment: 'node',
+		environment: 'jsdom',
 	},
 })

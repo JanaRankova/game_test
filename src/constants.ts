@@ -7,6 +7,7 @@ export const defaultPlayer1: Player = {
 	isActive: true,
 	gamesWon: 0,
 }
+
 export const defaultPlayer2: Player = {
 	id: 1,
 	name: 'Player 2',

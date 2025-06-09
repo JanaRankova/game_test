@@ -38,7 +38,7 @@ export function useGetEveryPokemonData(
 
 							if (!response.ok) {
 								throw new Error(
-									'Error while fetching all detailed pokemon data.',
+									'Error while fetching detailed pokemon data.',
 								)
 							}
 

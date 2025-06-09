@@ -62,7 +62,6 @@ export default function Input({
 			maxLength={maxLength}
 			onChange={(event) => onChange(event.target.value)}
 			onKeyDown={handleKeyDown}
-			//onBlur={onAbortChange}
 		/>
 	)
 

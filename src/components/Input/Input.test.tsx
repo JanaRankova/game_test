@@ -6,7 +6,6 @@ import userEvent from '@testing-library/user-event'
 import Input from './Input'
 
 describe('Input component', () => {
-	// Test setup
 	let user: ReturnType<typeof userEvent.setup>
 
 	beforeEach(() => {

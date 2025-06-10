@@ -17,6 +17,7 @@ export default function Card({ sprite, isFlipped, onCardFlip }: Props) {
 				className={classNames('pexeso-card', 'front', {
 					flipped: isFlipped,
 				})}
+				title="Pexeso card front"
 				onClick={onCardFlip}
 			>
 				<img src={sprite || errorImage} />
@@ -25,6 +26,7 @@ export default function Card({ sprite, isFlipped, onCardFlip }: Props) {
 				className={classNames('pexeso-card', 'back', {
 					flipped: isFlipped,
 				})}
+				title="Pexeso card back"
 				onClick={onCardFlip}
 			>
 				<img src={backImage} />

@@ -1,8 +1,8 @@
-import { describe, it, expect } from 'vitest'
 import { renderHook, waitFor } from '@testing-library/react'
-import { vi } from 'vitest'
 import { QueryClient, QueryClientProvider } from 'react-query'
+import { describe, expect, it, vi } from 'vitest'
 import { useGetAllPokemons, useGetEveryPokemonData } from '../api'
+import { PokemonListItem } from '../types'
 
 const mockResult = {
 	results: [
@@ -68,7 +68,6 @@ describe('useGetAllPokemons', () => {
 				Promise.resolve({
 					ok: false,
 					status: 500,
-					json: async () => ({}),
 				}),
 			),
 		)
@@ -87,16 +86,17 @@ describe('useGetAllPokemons', () => {
 })
 
 describe('useGetEveryPokemonData', () => {
-	const mockResultList = [
+	const mockResultList: PokemonListItem[] = [
 		{
 			name: 'venusaur',
-			url: 'https://pokeapi.co/api/v2/pokemon/venusaur',
+			url: 'https://pokeapi.co/api/v2/pokemon/3/',
 		},
 		{
 			name: 'charmander',
-			url: 'https://pokeapi.co/api/v2/pokemon/charmander',
+			url: 'https://pokeapi.co/api/v2/pokemon/4/',
 		},
 	]
+
 	afterEach(() => {
 		vi.restoreAllMocks()
 	})
@@ -134,7 +134,9 @@ describe('useGetEveryPokemonData', () => {
 		vi.stubGlobal('fetch', mockFetch)
 
 		mockFetch.mockImplementation((url: string) => {
-			const data = mockResponses.find((p) => url.includes(p.name))
+			const data = mockResponses.find((pokemon) =>
+				url.includes(pokemon.id.toString()),
+			)
 			return Promise.resolve({
 				ok: true,
 				json: () => Promise.resolve(data),
@@ -151,5 +153,44 @@ describe('useGetEveryPokemonData', () => {
 
 		expect(result.current[0].data?.name).toBe('venusaur')
 		expect(result.current[1].data?.name).toBe('charmander')
+	})
+
+	it('Error while fetching detailed pokemon data', async () => {
+		const mockFetch = vi.fn()
+		vi.stubGlobal('fetch', mockFetch)
+
+		// The most probable scenario is that some queries pass and some fail
+		mockFetch.mockImplementation((url: string) => {
+			if (url === 'https://pokeapi.co/api/v2/pokemon/3/') {
+				return Promise.resolve({
+					ok: true,
+					json: async () => ({
+						id: 3,
+						name: 'venusaur',
+						sprites: { front_default: 'front1', back_default: 'back1' },
+					}),
+				})
+			}
+
+			if (url === 'https://pokeapi.co/api/v2/pokemon/4/') {
+				return Promise.resolve({
+					ok: false,
+					status: 500,
+				})
+			}
+
+			return Promise.reject(new Error('Incorrect url'))
+		})
+
+		const { result } = renderHook(
+			() => useGetEveryPokemonData(mockResultList),
+			{ wrapper: wrapper },
+		)
+
+		await waitFor(() => {
+			expect(result.current.some((query) => query.isError)).toBe(true)
+		})
+
+		expect(result.current[0].data?.name).toBe('venusaur')
 	})
 })

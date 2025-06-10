@@ -46,7 +46,9 @@ export function isDetailedPokemon(value: unknown): value is PokemonDetails {
 		'spriteFront' in value &&
 		typeof (value as PokemonDetails).name === 'string' &&
 		typeof (value as PokemonDetails).id === 'number' &&
-		typeof (value as PokemonDetails).spriteBack === 'string' &&
-		typeof (value as PokemonDetails).spriteFront === 'string'
+		(typeof (value as PokemonDetails).spriteBack === 'string' ||
+			(value as PokemonDetails).spriteBack === null) &&
+		(typeof (value as PokemonDetails).spriteFront === 'string' ||
+			(value as PokemonDetails).spriteFront === null)
 	)
 }

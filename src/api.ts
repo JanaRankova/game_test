@@ -1,5 +1,5 @@
-import { useQuery, useQueries, UseQueryResult } from 'react-query'
 import { Pokemon } from 'pokenode-ts'
+import { UseQueryResult, useQueries, useQuery } from 'react-query'
 import { PokemonDetails, PokemonListItem } from './types'
 
 interface AllPokemonResponse {
@@ -25,9 +25,7 @@ export function useGetAllPokemons() {
 	})
 }
 
-export function useGetEveryPokemonData(
-	allPokemonListResponse: PokemonListItem[],
-) {
+export function useGetEveryPokemonData(allPokemonListResponse: PokemonListItem[]) {
 	return useQueries(
 		allPokemonListResponse
 			? allPokemonListResponse.map((listedPokemon) => {
@@ -37,9 +35,7 @@ export function useGetEveryPokemonData(
 							const response = await fetch(listedPokemon.url)
 
 							if (!response.ok) {
-								throw new Error(
-									'Error while fetching detailed pokemon data.',
-								)
+								throw new Error('Error while fetching detailed pokemon data.')
 							}
 
 							return response.json()

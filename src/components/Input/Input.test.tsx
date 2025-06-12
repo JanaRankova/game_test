@@ -36,13 +36,7 @@ describe('Input component', () => {
 		const handleOnChange = vi.fn()
 		const handleChangeAbort = vi.fn()
 
-		render(
-			<Input
-				value="blue"
-				onAbortChange={handleChangeAbort}
-				onChange={handleOnChange}
-			/>,
-		)
+		render(<Input value="blue" onAbortChange={handleChangeAbort} onChange={handleOnChange} />)
 
 		expect(screen.getByRole('textbox')).toHaveDisplayValue('blue')
 		await user.type(screen.getByRole('textbox'), '[Escape]')
@@ -53,13 +47,7 @@ describe('Input component', () => {
 		const handleOnChange = vi.fn()
 		const handleConfirm = vi.fn()
 
-		render(
-			<Input
-				value="blue"
-				onConfirm={handleConfirm}
-				onChange={handleOnChange}
-			/>,
-		)
+		render(<Input value="blue" onConfirm={handleConfirm} onChange={handleOnChange} />)
 
 		expect(screen.getByRole('textbox')).toHaveDisplayValue('blue')
 		await user.type(screen.getByRole('textbox'), '[Enter]')

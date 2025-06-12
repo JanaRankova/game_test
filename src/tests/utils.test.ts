@@ -24,9 +24,7 @@ describe('getNewDeck', () => {
 			mapOfOccurrence.set(number, (mapOfOccurrence.get(number) || 0) + 1)
 		}
 
-		expect(
-			[...mapOfOccurrence.values()].every((item) => item === 2),
-		).toBeTruthy()
+		expect([...mapOfOccurrence.values()].every((item) => item === 2)).toBeTruthy()
 	})
 })
 

@@ -1,33 +1,24 @@
+import pkmLogo from './assets/pokemon-logo-png-file-pokemon-logo-png-500.png'
 import { useGetAllPokemons, useGetEveryPokemonData } from './api'
 import { isDetailedPokemon, isPokemonListItem } from './types'
-import pkmLogo from './assets/pokemon-logo-png-file-pokemon-logo-png-500.png'
+
 import DefaultFallback from './components/ErrorHandling/DefaultFallback'
 import Game from './components/Game'
 import Loading from './components/Loading'
 
 function App() {
-	const {
-		isLoading,
-		data: allPokemonList,
-		isError,
-		error,
-	} = useGetAllPokemons()
+	const { isLoading, data: allPokemonList, isError, error } = useGetAllPokemons()
 
-	const allPokemonListResult = allPokemonList?.results?.every(
-		isPokemonListItem,
-	)
+	const allPokemonListResult = allPokemonList?.results?.every(isPokemonListItem)
 		? allPokemonList.results
 		: []
 
 	const pokemonDetailedQueries = useGetEveryPokemonData(allPokemonListResult)
 	const allLoaded =
-		!!pokemonDetailedQueries.length &&
-		pokemonDetailedQueries.every((query) => query.isSuccess)
+		!!pokemonDetailedQueries.length && pokemonDetailedQueries.every((query) => query.isSuccess)
 
 	const detailedList = allLoaded
-		? pokemonDetailedQueries
-				.map((query) => query.data)
-				.filter(isDetailedPokemon)
+		? pokemonDetailedQueries.map((query) => query.data).filter(isDetailedPokemon)
 		: []
 
 	return (
@@ -44,8 +35,7 @@ function App() {
 					) : isError ? (
 						<DefaultFallback error={error as string} />
 					) : (
-						allLoaded &&
-						detailedList && <Game allPokemons={detailedList} />
+						allLoaded && detailedList && <Game allPokemons={detailedList} />
 					)}
 				</div>
 				<div className="right" />

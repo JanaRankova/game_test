@@ -67,7 +67,7 @@ body
 .main-content
 	@include mixins.flexCenter($direction: column)
 	flex: 3 1
-	padding: 40px 0
+	padding: 1em 0
 	width: 100%
 	height: 100%
 
@@ -99,16 +99,6 @@ body
 					height: variables.$normalScreenImageSize
 					width: variables.$normalScreenImageSize
 
-.game-end-screen
-	@include mixins.flexCenter()
-	position: absolute
-	width: 480px
-	padding: 12px
-	background: variables.$greyBlue
-	border: 2px solid variables.$greyLight
-	border-radius: 8px
-	z-index: 100
-
 // Loading and errors
 .default-error
 	@include mixins.flexCenter()
@@ -117,6 +107,7 @@ body
 .error
 	margin: 5px 0
 	color: variables.$pokemonRedDark
+	font-size: variables.$smallFontSize
 
 .loading
 	@include mixins.flexCenter($direction: column)
@@ -210,6 +201,16 @@ button
 		display: flex
 		align-items: center
 
+.button-row
+	display: flex
+	justify-content: end
+	align-items: center
+	width: 100%
+	height: 58px
+
+	.reset
+		margin-top: 0
+
 
 // Smaller screens
 @media (max-width: 960px)
@@ -233,9 +234,6 @@ button
 
 		.psx-square
 			@include mixins.square(variables.$smallScreenImageSize)
-
-	.game-end-screen
-		max-width: 80vw
 
 // Phone devices
 @media (max-width: 480px)

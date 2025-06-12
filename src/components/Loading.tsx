@@ -20,12 +20,7 @@ export default function Loading() {
 
 	return (
 		<div className="loading">
-			<img
-				src={images[frame]}
-				alt="loading animation frame"
-				width={100}
-				height={100}
-			/>
+			<img src={images[frame]} alt="loading animation frame" width={100} height={100} />
 			<h3>Loading Pokedex data...</h3>
 		</div>
 	)

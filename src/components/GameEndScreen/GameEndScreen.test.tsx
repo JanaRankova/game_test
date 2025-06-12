@@ -11,13 +11,7 @@ describe('GameEndScreen component', () => {
 
 		const handleGameReset = vi.fn()
 
-		render(
-			<GameEndScreen
-				winner="Goofy player"
-				turnCount={10}
-				onGameReset={handleGameReset}
-			/>,
-		)
+		render(<GameEndScreen winner="Goofy player" turnCount={10} onGameReset={handleGameReset} />)
 
 		expect(screen.getByText('Goofy player won the game!')).toBeInTheDocument()
 		await user.click(screen.getByRole('button'))

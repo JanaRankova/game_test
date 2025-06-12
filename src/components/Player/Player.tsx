@@ -1,7 +1,6 @@
 import './player.sass'
 import errorImage from '../../assets/unknown-pokemon.png'
 import EditSvg from '../../assets/icons/edit.svg?react'
-
 import { useState } from 'react'
 import classNames from 'classnames'
 
@@ -10,10 +9,11 @@ import { Player } from '../../types'
 
 interface Props {
 	player: Player
+	otherPlayerName: string
 	onPlayerNameChange: (name: string) => void
 }
 
-export default function PlayerPanel({ player, onPlayerNameChange }: Props) {
+export default function PlayerPanel({ player, otherPlayerName, onPlayerNameChange }: Props) {
 	const [isEditing, setIsEditing] = useState(false)
 	const [name, setName] = useState(player.name)
 	const [nameError, setNameError] = useState<string | null>(null)
@@ -26,9 +26,10 @@ export default function PlayerPanel({ player, onPlayerNameChange }: Props) {
 			setNameError(
 				'Input can only contain letters, digits, dashes, underscores, and spaces between words.',
 			)
+		} else if (name === otherPlayerName) {
+			setNameError('Name is already used. Choose different one.')
 		} else {
 			setNameError(null)
-
 			return true
 		}
 	}

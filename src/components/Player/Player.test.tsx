@@ -31,7 +31,11 @@ describe('PlayerPanel Component', () => {
 		handleChange = vi.fn()
 
 		render(
-			<PlayerPanel player={testPlayer} onPlayerNameChange={handleChange} />,
+			<PlayerPanel
+				player={testPlayer}
+				otherPlayerName="second"
+				onPlayerNameChange={handleChange}
+			/>,
 		)
 	})
 
@@ -58,6 +62,36 @@ describe('PlayerPanel Component', () => {
 		await user.keyboard('[Escape]')
 		expect(handleChange).toHaveBeenCalled()
 		// Change is aborted and input is switched to player name with the old value.
-		expect(screen.getByText('Player')).toBeInTheDocument
+		expect(screen.getByText('Player')).toBeInTheDocument()
+	})
+
+	it('Choosing invalid name ends in error - name stays unchanged', async () => {
+		await user.click(screen.getByTitle('Edit player name'))
+
+		const input = screen.getByRole('textbox')
+		await user.clear(input)
+
+		// Test no name
+		await user.paste('')
+		await user.keyboard('[Enter]')
+
+		expect(screen.getByText('Enter a name.')).toBeInTheDocument()
+
+		// Test disallowed characters
+		await user.paste('***')
+		await user.keyboard('[Enter]')
+
+		expect(
+			screen.getByText(
+				'Input can only contain letters, digits, dashes, underscores, and spaces between words.',
+			),
+		).toBeInTheDocument()
+
+		// Test equal names
+		await user.clear(input)
+		await user.paste('second')
+		await user.keyboard('[Enter]')
+
+		expect(screen.getByText('Name is already used. Choose different one.')).toBeInTheDocument()
 	})
 })

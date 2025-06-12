@@ -71,12 +71,7 @@ export default function Input({
 			<div className="clearable-icon">
 				{!!value && clearable && (
 					<ClearSvg
-						className={classNames(
-							'icon',
-							'normal',
-							'light',
-							'clear-input',
-						)}
+						className={classNames('icon', 'normal', 'light', 'clear-input')}
 						title="Clear input"
 						tabIndex={1}
 						onClick={handleClear}

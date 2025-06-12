@@ -4,9 +4,10 @@ import { Flip, Player, PokemonDetails, isNonNullFlip } from '../types'
 import { getNewDeck } from '../utils'
 import { defaultPlayer1, defaultPlayer2 } from '../constants'
 
-import PxsCard from './Card/Card'
+import GameEndScreen from '../components/GameEndScreen/GameEndScreen'
 import PlayerPanel from './Player/Player'
-import GameEndScreen from './GameEndScreen'
+import PxsCard from './Card/Card'
+import ResetButton from './Buttons/ResetButton'
 
 interface Props {
 	allPokemons: PokemonDetails[]
@@ -47,27 +48,17 @@ export default function PexesoField({ allPokemons }: Props) {
 	}
 
 	const calculateTurn = (firstCard: Flip, secondCard: Flip) => {
-		if (
-			isNonNullFlip(firstCard) &&
-			isNonNullFlip(secondCard) &&
-			firstCard[1] === secondCard[1]
-		) {
+		if (isNonNullFlip(firstCard) && isNonNullFlip(secondCard) && firstCard[1] === secondCard[1]) {
 			setMatched([...matched, firstCard[0], secondCard[0]])
 			if (playerOne.isActive) {
 				setPlayerOne({
 					...playerOne,
-					matchedCards: [
-						...playerOne.matchedCards,
-						allPokemons[firstCard[1]],
-					],
+					matchedCards: [...playerOne.matchedCards, allPokemons[firstCard[1]]],
 				})
 			} else {
 				setPlayerTwo({
 					...playerTwo,
-					matchedCards: [
-						...playerTwo.matchedCards,
-						allPokemons[firstCard[1]],
-					],
+					matchedCards: [...playerTwo.matchedCards, allPokemons[firstCard[1]]],
 				})
 			}
 		} else {
@@ -85,15 +76,12 @@ export default function PexesoField({ allPokemons }: Props) {
 		}, 1500)
 	}
 
-	const getWinner = (
-		playerFirst: Player,
-		playerSecond: Player,
-	): string | undefined => {
+	const getWinner = (playerFirst: Player, playerSecond: Player): string | undefined => {
 		const firstScore = playerFirst.matchedCards.length
 		const secondScore = playerSecond.matchedCards.length
 
-		// No one won, it's a tie
-		if (firstScore === secondScore) return
+		// No one won or game is reset before the end, it's a tie
+		if (cardsSum === matched.length || firstScore === secondScore) return
 
 		return firstScore > secondScore ? playerFirst.name : playerTwo.name
 	}
@@ -105,12 +93,12 @@ export default function PexesoField({ allPokemons }: Props) {
 			const firstStarts = Math.random() < 0.5
 			setPlayerOne((prev) => ({
 				...prev,
-				gamesWon: prev.gamesWon + 1,
+				gamesWon: prev.gamesWon,
 				isActive: firstStarts,
 			}))
 			setPlayerTwo((prev) => ({
 				...prev,
-				gamesWon: prev.gamesWon + 1,
+				gamesWon: prev.gamesWon,
 				isActive: !firstStarts,
 			}))
 		} else if (winner === playerOne.name) {
@@ -129,58 +117,63 @@ export default function PexesoField({ allPokemons }: Props) {
 		setPlayerOne((prev) => ({ ...prev, matchedCards: [] }))
 		setPlayerTwo((prev) => ({ ...prev, matchedCards: [] }))
 		setMatched([])
-		setTurnCount(0)
+		setTurnCount(1)
 		setShuffledCards(getNewDeck())
 	}
 
 	return (
-		<div className="game">
-			<PlayerPanel
-				player={playerOne}
-				onPlayerNameChange={(name: string) =>
-					setPlayerOne((prev) => ({ ...prev, name: name }))
-				}
-			/>
-			<div className="field-wrap">
-				<div>
-					<p>TURN {turnCount}</p>
-					<p>{`Player <${playerOne.isActive ? playerOne.name : defaultPlayer2.name}>`}</p>
-				</div>
-				<div className="pexeso-field">
-					<div className="pexeso">
-						{allPokemons &&
-							shuffledCards &&
-							shuffledCards.map((pokeId, i) => (
-								<div className="psx-square" key={i}>
-									{matched.includes(i) ? (
-										<div className="pexeso-card empty" />
-									) : (
-										<PxsCard
-											sprite={allPokemons[pokeId]?.spriteFront}
-											isFlipped={
-												i === cardOne[0] || i === cardTwo[0]
-											}
-											onCardFlip={() => handleCardFlip(i, pokeId)}
-										/>
-									)}
-								</div>
-							))}
-					</div>
-					{cardsSum === matched.length && (
-						<GameEndScreen
-							winner={getWinner(playerOne, playerTwo)}
-							turnCount={turnCount}
-							onGameReset={resetGame}
-						/>
-					)}
-				</div>
+		<>
+			<div className="button-row">
+				{turnCount > 1 && <ResetButton text={'Restart game'} onReset={resetGame} />}
 			</div>
-			<PlayerPanel
-				player={playerTwo}
-				onPlayerNameChange={(name: string) =>
-					setPlayerTwo((prev) => ({ ...prev, name: name }))
-				}
-			/>
-		</div>
+			<div className="game">
+				<PlayerPanel
+					player={playerOne}
+					otherPlayerName={playerTwo.name}
+					onPlayerNameChange={(name: string) =>
+						setPlayerOne((prev) => ({ ...prev, name: name }))
+					}
+				/>
+				<div className="field-wrap">
+					<div>
+						<p>TURN {turnCount}</p>
+						<p>{`Player <${playerOne.isActive ? playerOne.name : defaultPlayer2.name}>`}</p>
+					</div>
+					<div className="pexeso-field">
+						<div className="pexeso">
+							{allPokemons &&
+								shuffledCards &&
+								shuffledCards.map((pokeId, i) => (
+									<div className="psx-square" key={i}>
+										{matched.includes(i) ? (
+											<div className="pexeso-card empty" />
+										) : (
+											<PxsCard
+												sprite={allPokemons[pokeId]?.spriteFront}
+												isFlipped={i === cardOne[0] || i === cardTwo[0]}
+												onCardFlip={() => handleCardFlip(i, pokeId)}
+											/>
+										)}
+									</div>
+								))}
+						</div>
+						{cardsSum === matched.length && (
+							<GameEndScreen
+								winner={getWinner(playerOne, playerTwo)}
+								turnCount={turnCount}
+								onGameReset={resetGame}
+							/>
+						)}
+					</div>
+				</div>
+				<PlayerPanel
+					player={playerTwo}
+					otherPlayerName={playerOne.name}
+					onPlayerNameChange={(name: string) =>
+						setPlayerTwo((prev) => ({ ...prev, name: name }))
+					}
+				/>
+			</div>
+		</>
 	)
 }

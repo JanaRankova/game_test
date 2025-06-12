@@ -1,7 +1,6 @@
 import './card.sass'
 import backImage from '../../assets/pokeball-16809.png'
 import errorImage from '../../assets/unknown-pokemon.png'
-
 import classNames from 'classnames'
 
 interface Props {

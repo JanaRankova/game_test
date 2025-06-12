@@ -79,9 +79,7 @@ describe('useGetAllPokemons', () => {
 		})
 
 		expect(result.current.error).toBeInstanceOf(Error)
-		expect((result.current.error as Error).message).toBe(
-			'Error while fetching pokemon data.',
-		)
+		expect((result.current.error as Error).message).toBe('Error while fetching pokemon data.')
 	})
 })
 
@@ -134,18 +132,15 @@ describe('useGetEveryPokemonData', () => {
 		vi.stubGlobal('fetch', mockFetch)
 
 		mockFetch.mockImplementation((url: string) => {
-			const data = mockResponses.find((pokemon) =>
-				url.includes(pokemon.id.toString()),
-			)
+			const data = mockResponses.find((pokemon) => url.includes(pokemon.id.toString()))
 			return Promise.resolve({
 				ok: true,
 				json: () => Promise.resolve(data),
 			})
 		})
-		const { result } = renderHook(
-			() => useGetEveryPokemonData(mockResultList),
-			{ wrapper: wrapper },
-		)
+		const { result } = renderHook(() => useGetEveryPokemonData(mockResultList), {
+			wrapper: wrapper,
+		})
 
 		await waitFor(() => {
 			expect(result.current.every((query) => query.isSuccess)).toBe(true)
@@ -182,10 +177,9 @@ describe('useGetEveryPokemonData', () => {
 			return Promise.reject(new Error('Incorrect url'))
 		})
 
-		const { result } = renderHook(
-			() => useGetEveryPokemonData(mockResultList),
-			{ wrapper: wrapper },
-		)
+		const { result } = renderHook(() => useGetEveryPokemonData(mockResultList), {
+			wrapper: wrapper,
+		})
 
 		await waitFor(() => {
 			expect(result.current.some((query) => query.isError)).toBe(true)

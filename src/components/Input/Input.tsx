@@ -1,5 +1,5 @@
-import ClearSvg from '../assets/icons/cross.svg?react'
-import SearchSvg from '../assets/icons/search.svg?react'
+import './input.sass'
+import ClearSvg from '../../assets/icons/cross.svg?react'
 
 import classNames from 'classnames'
 import { useRef } from 'react'
@@ -8,24 +8,24 @@ interface Props {
 	value: string
 	name?: string
 	className?: string
-	isSearch?: boolean
 	clearable?: boolean
 	placeholder?: string
 	maxLength?: number
-	endIcon?: React.ReactNode
 	onChange: (value: string) => void
+	onAbortChange?: () => void
+	onConfirm?: () => void
 }
 
 export default function Input({
 	value,
 	name,
 	className,
-	isSearch,
 	clearable,
 	placeholder,
 	maxLength,
-	endIcon,
 	onChange,
+	onAbortChange,
+	onConfirm,
 }: Props) {
 	const inputRef = useRef<HTMLInputElement>(null)
 
@@ -36,6 +36,20 @@ export default function Input({
 		onChange('')
 	}
 
+	const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+		if (event.key === 'Escape') {
+			if (onAbortChange) {
+				onAbortChange()
+			}
+		}
+
+		if (event.key === 'Enter') {
+			if (onConfirm) {
+				onConfirm()
+			}
+		}
+	}
+
 	const textInput = (
 		<input
 			ref={inputRef}
@@ -43,34 +57,21 @@ export default function Input({
 			name={name}
 			className={className}
 			value={value}
+			autoFocus
 			placeholder={placeholder}
 			maxLength={maxLength}
 			onChange={(event) => onChange(event.target.value)}
+			onKeyDown={handleKeyDown}
 		/>
 	)
 
-	return clearable || isSearch ? (
-		<div
-			className={classNames('clearable-icon-wrapper', {
-				search: isSearch,
-			})}
-		>
-			{isSearch && (
-				<SearchSvg
-					className={classNames('icon', 'small', 'light', 'search-input')}
-				/>
-			)}
+	return clearable ? (
+		<div className="clearable-input-wrapper">
 			{textInput}
-			<div className="text-input-icon-wrapper">
-				{endIcon}
+			<div className="clearable-icon">
 				{!!value && clearable && (
 					<ClearSvg
-						className={classNames(
-							'icon',
-							'small',
-							'light',
-							'clear-input',
-						)}
+						className={classNames('icon', 'normal', 'light', 'clear-input')}
 						title="Clear input"
 						tabIndex={1}
 						onClick={handleClear}
@@ -79,9 +80,6 @@ export default function Input({
 			</div>
 		</div>
 	) : (
-		<>
-			{textInput}
-			{endIcon}
-		</>
+		textInput
 	)
 }

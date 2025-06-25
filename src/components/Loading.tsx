@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function Loading() {
 	const [frame, setFrame] = useState(0)
@@ -22,11 +22,11 @@ export default function Loading() {
 		<div className="loading">
 			<img
 				src={images[frame]}
-				alt="loading animation frame"
+				alt="Loading animation with vulpix pokemon running."
 				width={100}
 				height={100}
 			/>
-			<div>Loading data...</div>
+			<h3>Loading Pokedex data...</h3>
 		</div>
 	)
 }

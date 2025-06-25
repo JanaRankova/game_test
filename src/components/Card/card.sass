@@ -1,0 +1,46 @@
+@use '../../styles/variables.sass'
+@use '../../styles/mixins.sass'
+
+.pexeso-card
+	transition: transform 1.5s ease
+	backface-visibility: hidden
+	position: absolute
+	height: variables.$normalScreenImageSize
+	width: variables.$normalScreenImageSize
+
+	&.empty
+		background: transparent
+		border: 1px solid variables.$greyLight
+
+	img
+		width: variables.$normalScreenImageSize
+		height: variables.$normalScreenImageSize
+
+	&.back
+		background: variables.$pokemonBlue
+		transform: rotateY(0deg)
+
+		&.flipped
+			transform: rotateY(180deg)
+
+	&.front
+		background: variables.$pokemonYellowDark
+		transform: rotateY(180deg)
+
+		&.flipped
+			transform: rotateY(0deg)
+
+// Tablet devices
+@media (max-width: 768px)
+	.pexeso-card
+		@include mixins.square(variables.$smallScreenImageSize)
+
+		img
+			@include mixins.square(variables.$smallScreenImageSize)
+
+// @media (max-height: 900px)
+// 	.pexeso-card
+// 		@include mixins.square(variables.$smallScreenImageSize)
+
+// 		img
+// 			@include mixins.square(variables.$smallScreenImageSize)

@@ -1,0 +1,18 @@
+@use '../../styles/variables'
+@use '../../styles/_mixins'
+
+.game-end-screen
+	@include mixins.flexCenter()
+	position: absolute
+	width: 480px
+	padding: 12px
+	background: variables.$greyBlue
+	border: 2px solid variables.$greyLight
+	border-radius: 8px
+	z-index: 100
+
+// Tablet devices
+@media (max-width: 768px)
+
+	.game-end-screen
+		max-width: 80vw

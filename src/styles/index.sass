@@ -1,5 +1,5 @@
 @use 'variables'
-
+@use 'mixins'
 
 :root
 	font-family: variables.$baseFontFamily
@@ -7,8 +7,7 @@
 	line-height: 1.5
 	font-weight: variables.$regularFontWeight
 
-	color-scheme: light dark
-	color: rgba(255, 255, 255, 0.87)
+	color: variables.$white
 	background-color: variables.$blackAlmost
 
 	font-synthesis: none
@@ -21,10 +20,10 @@ body
 
 #root
 	display: flex
+	flex-direction: column
 	flex: 1
 	min-width: 100%
 	min-height: 100vh
-	flex-direction: column
 
 .top
 	display: flex
@@ -36,13 +35,11 @@ body
 	color: variables.$greyLightText
 	border-bottom: 1px solid variables.$greyLight
 
-	.btn
-		&.top-panel
-			margin: 0 16px
+	.top-panel
+		margin: 0 16px
 
 .bottom
 	display: flex
-	flex-direction: row
 	justify-content: space-between
 	padding: 10px
 	background: variables.$greyBlueDark
@@ -56,35 +53,21 @@ body
 	height: 100%
 	background: variables.$greyBrown
 
-.left,.right
-	flex: 1
-	flex-shrink: 0
-	background: variables.$greyBlue
+	.left,.right
+		flex: 1
+		flex-shrink: 0
+		background: variables.$greyBlue
 
-.left
-	border-right: 1px solid variables.$greyLight
+	.left
+		border-right: 1px solid variables.$greyLight
 
-.right
-	border-left: 1px solid variables.$greyLight
-
-.loading
-	display: flex
-	flex-direction: column
-	justify-content: center
-	align-items: center
-	padding: 20px
-
-	img
-		margin: 20px
-
+	.right
+		border-left: 1px solid variables.$greyLight
 
 .main-content
-	display: flex
-	flex-direction: column
-	flex: 3 1
-	justify-content: center
-	align-items: center
-	padding: 40px 0
+	@include mixins.flexCenter($direction: column)
+	flex: 5
+	padding: 1em 0
 	width: 100%
 	height: 100%
 
@@ -92,106 +75,93 @@ body
 	display: flex
 	flex-direction: row
 	justify-items: center
-	flex: 1
-	width: 100%
 
-.field-wrap
-	display: flex
-	flex-direction: column
-	justify-content: center
-	align-items: center
-	margin: 0 20px
-	text-align: center
-
-.player-panel
-	display: flex
-	flex-direction: column
-	width: 100%
-	min-width: 140px
-	max-width: 200px
-	padding: 12px
-	text-align: center
-	color: variables.$greyWhiteText
-	border: 2px solid variables.$greyLight
-	border-radius: 8px
-
-	.player-name
-		padding-bottom: 6px
-		border-bottom: 1px solid variables.$greyLight
-
-	&.active
-		border: 2px solid variables.$activeColour
-
-.psx-field
-	display: flex
-	flex-direction: column
-	justify-content: center
-	align-items: center
-
-.pexeso
-	display: grid
-	max-width: 720px
-	padding: 12px
-	grid-template-columns: 1fr 1fr 1fr 1fr
-	gap: 16px
-
-	.psx-square
+	.game-header
+		position: relative
 		display: flex
-		justify-content: center
+		min-width: 100%
+
+		.game-info
+			display: flex
+			flex-direction: column
+			flex: 1
+
+			> :nth-child(1)
+				margin-bottom: 0
+
+		button.reset
+			position: absolute
+			z-index: 1
+			right: 0
+
+	.field-wrap
+		display: flex
+		flex-direction: column
 		align-items: center
-		height: 120px
-		width: 120px
+		margin: 0 20px
+		text-align: center
 
-	.pxs_card
-		transition: transform 1.5s ease
-		backface-visibility: hidden
-		position: absolute
-		height: 120px
-		width: 120px
+		.pexeso-field
+			@include mixins.flexCenter($direction: column)
 
-		&.empty
-			background: transparent
-			border: 1px solid variables.$greyLight
+			.pexeso
+				display: grid
+				padding: 12px
+				grid-template-columns: repeat(4, 1fr)
+				gap: 1em
 
-	.back
-		background: variables.$pokemonYellowDark
-		transform: rotateY(180deg)
+// This class in on the top level to lower it's specificity - otherwise its media query style isn't applied (to avoid the use of '!important' and stacking of classes needlesly)
+.pexeso-square
+	@include mixins.flexCenter()
+	@include mixins.square(variables.$normalScreenImageSize)
 
-		&.flipped
-			transform: rotateY(0deg)
+// Loading and errors
+.default-error
+	@include mixins.flexCenter()
+	padding: 80px 60px
 
-	.front
-		background: variables.$pokemonBlue
-		transform: rotateY(0deg)
+.error
+	margin: 5px 0
+	color: variables.$pokemonRedDark
+	font-size: variables.$smallFontSize
 
-		&.flipped
-			transform: rotateY(180deg)
+.loading
+	@include mixins.flexCenter($direction: column)
+	padding: 20px
 
-.game-end-screen
-	position: absolute
-	display: flex
-	justify-content: center
-	align-items: center
-	width: 480px
-	padding: 12px
-	background: variables.$greyBlue
-	border: 2px solid variables.$greyLight
-	border-radius: 8px
-	z-index: 100
+	img
+		margin: 20px
+
+
+// Loading and errors
+.default-error
+	@include mixins.flexCenter()
+	padding: 80px 60px
+
+.error
+	margin: 5px 0
+	color: variables.$pokemonRedDark
+
+.loading
+	@include mixins.flexCenter($direction: column)
+	padding: 20px
+
+	img
+		margin: 20px
+
 
 // Icons
 .icon
 	margin-left: 10px
 
 	&.small
-		width: 18px
-		height: 18px
+		@include mixins.square(18px)
+
 	&.normal
-		width: 24px
-		height: 24px
+		@include mixins.square(24px)
+
 	&.big
-		width: 30px
-		height: 30px
+		@include mixins.square(30px)
 
 	&.light
 		fill: variables.$greyWhiteText
@@ -199,30 +169,19 @@ body
 	&.dark
 		fill: variables.$blackAlmost
 
-.icon-wrapper
-	display: inline-flex
-	justify-content: center
-	align-items: center
+	&:hover
+		fill: variables.$activeColour
 
-// inputs
-input[type="text"],
-input[type="search"]
-	display: inline-block
-	box-sizing: border-box
-	padding: 10px 12px
-	min-height: 40px
-	line-height: 20px
-	border: none
-	border-bottom: 1px variables.$greyWhiteText solid
-	background: variables.$greyLight
-
+// Common tags and classes
 a
-	font-weight: 500
 	color: variables.$spruce
 	text-decoration: inherit
 
 	&:hover
-		color: variables.$spruce
+		text-decoration: underline
+
+	&:visited
+		color: variables.$pokemonYellowDark
 
 h1
 	font-size: 2rem
@@ -236,43 +195,69 @@ h3
 h4
 	font-size: 1.2rem
 
-h5
-	font-size: 1.1rem
-
-h6
-	font-size: 1rem
-
 .bold
 	font-weight: variables.$mediumFontWeight
 
-
 button
+	position: relative // Needed due to the fact that button on end game layer has issues with :hover, :focus states
 	border-radius: 4px
 	border: 1px solid variables.$greyLightText
 	padding: 0.6em 1.2em
+	margin: 0.8em
 	font-size: 1em
 	font-weight: 500
 	font-family: inherit
 	background-color: variables.$greyBlue
+	color: variables.$greyWhiteText
 	cursor: pointer
 	transition: border-color 0.25s
 
 	&:hover
-		border-color: variables.$greyLight
+		background: variables.$greyLight
+		color: variables.$activeColour
+		border: 1px solid variables.$activeColour
+
+		.icon
+			fill: variables.$activeColour
 
 	&:focus,
 	&:focus-visible
-		outline: 4px auto -webkit-focus-ring-color
+		outline: 4px auto variables.$activeColour
 
+	span
+		display: flex
+		align-items: center
 
-@media (prefers-color-scheme: light)
-	:root
-		color: #213547
-		background-color: variables.$greyWhiteText
+	// Buttons without text
+	&.icon-only
+		padding: 10px
 
-	a:hover
-		color: variables.$spruce
+		svg
+			margin: 0
 
-	button
-		background: variables.$spruce
-		color: variables.$greyWhiteText
+// Smaller screens
+@media (max-width: 960px)
+	.game
+		@include mixins.flexCenter($direction: column)
+
+// Tablet devices
+@media (max-width: 768px)
+	.left, .right
+		display: none
+
+	.player-panel
+		max-width: 80vw
+
+	.pexeso
+		display: grid
+		max-width: 100%
+		gap: 0.4em
+
+	.pexeso-square
+		@include mixins.square(variables.$smallScreenImageSize)
+
+// Phone devices
+@media (max-width: 480px)
+	.default-error
+		flex-direction: column
+		padding: 60px 40px

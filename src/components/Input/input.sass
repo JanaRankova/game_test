@@ -1,0 +1,33 @@
+@use '../../styles/mixins'
+@use '../../styles/variables'
+
+input[type="text"]
+	display: inline-block
+	box-sizing: border-box
+	min-height: 36px
+	padding: 8px 12px
+	line-height: 20px
+	border: none
+	background: variables.$greyLight
+	color: variables.$greyWhiteText
+
+	&:hover,
+	&:focus
+		outline: none
+
+.clearable-input-wrapper
+	@include mixins.flexCenter()
+	position: relative
+
+	input
+		position: relative
+		width: 100%
+		padding-right: 30px // Buffer for clear icon
+		z-index: 10
+
+	.clearable-icon
+		@include mixins.flexCenter()
+		position: absolute
+		top: calc(50% - 12px)
+		right: 0
+		z-index: 20

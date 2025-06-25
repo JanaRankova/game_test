@@ -1,0 +1,79 @@
+@use './../../styles/_variables.sass'
+
+.player-panel
+	display: flex
+	flex-direction: column
+	width: 100%
+	min-width: 140px
+	max-width: 180px
+	padding: 12px
+	margin: 0 12px
+	text-align: center
+	color: variables.$greyWhiteText
+	border: 2px solid variables.$greyLight
+	border-radius: 8px
+
+	&.active
+		border: 2px solid variables.$activeColour
+
+	.player-name
+		display: flex
+		justify-content: center
+		align-items: center
+		height: 36px
+		margin-bottom: 6px
+		border-bottom: 1px solid variables.$greyLight
+		overflow: hidden
+
+		&:hover
+			background: variables.$greyLight
+			color: variables.$pokemonYellow
+
+			.icon
+				fill: variables.$pokemonYellow
+
+	.player-cards
+		max-height: 80vh
+		overflow: auto
+
+		img
+			max-height: variables.$mediumScreenImageSize
+
+	&.mini
+		flex-direction: row
+		flex-wrap: wrap
+		justify-content: space-around
+		align-content: center
+		max-height: 50px !important
+		padding: 6px
+
+		.player-name
+			border: none
+			max-width: 60%
+			margin: 0
+
+		.clearable-input-wrapper
+			max-width: 60%
+
+		.pokemon-matches, .games-won
+			display: flex
+			justify-content: center
+			align-items: center
+			padding: 0 10px
+
+// Smaller screens
+@media (max-width: 960px)
+	.player-panel
+		min-width: 60vw
+
+		.player-cards
+			display: flex
+			flex-wrap: wrap
+
+			img
+				max-height: variables.$smallScreenImageSize
+
+// Tablet devices
+@media (max-width: 768px)
+	.player-panel
+		max-width: 80vw

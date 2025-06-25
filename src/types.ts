@@ -16,6 +16,17 @@ export interface Player {
 	gamesWon: number
 }
 
+export interface GameState {
+	playerOne: Player
+	playerTwo: Player
+	cardOne: Flip
+	cardTwo: Flip
+	matched: number[]
+	turnCount: number
+	shuffledCards: number[]
+	processing: boolean
+}
+
 // Type guards
 export function isNonNullFlip(flip: unknown): flip is [number, number] {
 	return (

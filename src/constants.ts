@@ -1,4 +1,4 @@
-import { Player } from './types'
+import { Flip, Player } from './types'
 
 export const defaultPlayer1: Player = {
 	id: 0,
@@ -15,3 +15,5 @@ export const defaultPlayer2: Player = {
 	isActive: false,
 	gamesWon: 0,
 }
+
+export const emptyCard: Flip = [null, null]

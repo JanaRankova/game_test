@@ -1,8 +1,10 @@
-import { useState } from 'react'
+import { useReducer } from 'react'
 
-import { defaultPlayer1, defaultPlayer2 } from '../constants'
-import { Flip, Player, PokemonDetails, isNonNullFlip } from '../types'
+import { defaultPlayer1, defaultPlayer2, emptyCard } from '../constants'
+import { Flip, Player, PokemonDetails } from '../types'
 import { getNewDeck } from '../utils'
+import { gameReducer } from '../reducer'
+import { GameActions } from '../actions'
 
 import GameEndScreen from '../components/GameEndScreen/GameEndScreen'
 import PlayerPanel from './Player/Player'
@@ -13,66 +15,44 @@ interface Props {
 	allPokemons: PokemonDetails[]
 }
 
-const emptyCard: Flip = [null, null]
-
 export default function PexesoField({ allPokemons }: Props) {
-	const [shuffledCards, setShuffledCards] = useState(getNewDeck())
-	const [cardOne, setCardOne] = useState<Flip>(emptyCard)
-	const [cardTwo, setCardTwo] = useState<Flip>(emptyCard)
-	const [playerOne, setPlayerOne] = useState<Player>(defaultPlayer1)
-	const [playerTwo, setPlayerTwo] = useState<Player>(defaultPlayer2)
-	const [processing, setProcessing] = useState(false)
-	const [matched, setMatched] = useState<number[]>([])
-	const [turnCount, setTurnCount] = useState(1)
+	const [state, dispatch] = useReducer(gameReducer, {
+		playerOne: defaultPlayer1,
+		playerTwo: defaultPlayer2,
+		cardOne: emptyCard,
+		cardTwo: emptyCard,
+		matched: [],
+		turnCount: 1,
+		shuffledCards: getNewDeck(),
+		processing: false,
+	})
+
 	const cardsSum = 16
 
 	const handleCardFlip = (index: number, id: number) => {
 		// Forbid card flip while processing the previous turn
-		if (processing) {
+		if (state.processing) {
 			return
 		}
 
-		if (!cardOne[0] && !cardOne[1]) {
-			setCardOne([index, id])
-		} else if (cardOne[0] !== index && !cardTwo[0]) {
-			setCardTwo([index, id])
-			processTurn(cardOne, [index, id])
-		}
-	}
-
-	const resetTurn = () => {
-		setCardOne(emptyCard)
-		setCardTwo(emptyCard)
-		setProcessing(false)
-		setTurnCount(turnCount + 1)
-	}
-
-	const calculateTurn = (firstCard: Flip, secondCard: Flip) => {
-		if (isNonNullFlip(firstCard) && isNonNullFlip(secondCard) && firstCard[1] === secondCard[1]) {
-			setMatched([...matched, firstCard[0], secondCard[0]])
-			if (playerOne.isActive) {
-				setPlayerOne({
-					...playerOne,
-					matchedCards: [...playerOne.matchedCards, allPokemons[firstCard[1]]],
-				})
-			} else {
-				setPlayerTwo({
-					...playerTwo,
-					matchedCards: [...playerTwo.matchedCards, allPokemons[firstCard[1]]],
-				})
-			}
-		} else {
-			// Switch players after a turn with no match
-			setPlayerTwo((prev) => ({ ...prev, isActive: !prev.isActive }))
-			setPlayerOne((prev) => ({ ...prev, isActive: !prev.isActive }))
+		if (!state.cardOne[0] && !state.cardOne[1]) {
+			dispatch({ type: GameActions.SET_CARD, card: 'cardOne', flip: [index, id] })
+		} else if (state.cardOne[0] !== index && !state.cardTwo[0]) {
+			dispatch({ type: GameActions.SET_CARD, card: 'cardTwo', flip: [index, id] })
+			processTurn(state.cardOne, [index, id])
 		}
 	}
 
 	const processTurn = (first: Flip, second: Flip) => {
-		setProcessing(true)
+		dispatch({ type: GameActions.SET_PROCESSING, isProcessing: true })
 		setTimeout(() => {
-			calculateTurn(first, second)
-			resetTurn()
+			dispatch({
+				type: GameActions.CALCULATE_TURN,
+				firstCard: first,
+				secondCard: second,
+				pokemonCard: first?.[1] != null ? allPokemons[first[1]] : null,
+			})
+			dispatch({ type: GameActions.RESET_TURN })
 		}, 1500)
 	}
 
@@ -81,94 +61,68 @@ export default function PexesoField({ allPokemons }: Props) {
 		const secondScore = playerSecond.matchedCards.length
 
 		// No one won or game is reset before the end, it's a tie
-		if (cardsSum !== matched.length || firstScore === secondScore) return null
+		if (cardsSum !== state.matched.length || firstScore === secondScore) return null
 
-		return firstScore > secondScore ? playerFirst.name : playerTwo.name
+		return firstScore > secondScore ? playerFirst.name : playerSecond.name
 	}
 
 	const resetGame = () => {
-		// Winner is the first on turn unless it's a tie - then pick player randomly.
-		const winner = getWinner(playerOne, playerTwo)
-
-		let playerOneUpdate = { ...playerOne, matchedCards: [] }
-		let playerTwoUpdate = { ...playerTwo, matchedCards: [] }
-
-		if (!winner) {
-			const firstStarts = Math.random() < 0.5
-			playerOneUpdate.isActive = firstStarts
-			playerTwoUpdate.isActive = !firstStarts
-		} else if (winner === playerOne.name) {
-			playerOneUpdate = {
-				...playerOneUpdate,
-				gamesWon: playerOne.gamesWon + 1,
-				isActive: true,
-			}
-			playerTwoUpdate.isActive = false
-		} else {
-			playerTwoUpdate = {
-				...playerTwoUpdate,
-				gamesWon: playerTwo.gamesWon + 1,
-				isActive: true,
-			}
-			playerOneUpdate.isActive = false
-		}
-
-		setPlayerOne(playerOneUpdate)
-		setPlayerTwo(playerTwoUpdate)
-
-		setCardOne(emptyCard)
-		setCardTwo(emptyCard)
-		setMatched([])
-		setTurnCount(1)
-		setShuffledCards(getNewDeck())
+		dispatch({
+			type: GameActions.RESET_GAME,
+			winner: getWinner(state.playerOne, state.playerTwo),
+		})
 	}
 
 	return (
 		<div className="game">
 			<PlayerPanel
-				player={playerOne}
-				otherPlayerName={playerTwo.name}
-				onPlayerNameChange={(name: string) => setPlayerOne((prev) => ({ ...prev, name: name }))}
+				player={state.playerOne}
+				otherPlayerName={state.playerTwo.name}
+				onPlayerNameChange={(name: string) =>
+					dispatch({ type: GameActions.SET_PLAYER_NAME, player: 'playerOne', name })
+				}
 			/>
 			<div className="field-wrap">
 				<div className="game-header">
 					<div className="game-info">
-						<p>TURN {turnCount}</p>
-						<p>{`Player <${playerOne.isActive ? playerOne.name : defaultPlayer2.name}>`}</p>
+						<p>TURN {state.turnCount}</p>
+						<p>{`Player <${state.playerOne.isActive ? state.playerOne.name : state.playerTwo.name}>`}</p>
 					</div>
-					{turnCount > 1 && <ResetButton text={''} onReset={resetGame} />}
+					{state.turnCount > 1 && <ResetButton text={''} onReset={resetGame} />}
 				</div>
 				<div className="pexeso-field">
 					<div className="pexeso">
 						{allPokemons &&
-							shuffledCards &&
-							shuffledCards.map((pokeId, i) => (
+							state.shuffledCards &&
+							state.shuffledCards.map((pokeId, i) => (
 								<div className="pexeso-square" key={i}>
-									{matched.includes(i) ? (
+									{state.matched.includes(i) ? (
 										<div className="pexeso-card empty" />
 									) : (
 										<PxsCard
 											sprite={allPokemons[pokeId]?.spriteFront}
-											isFlipped={i === cardOne[0] || i === cardTwo[0]}
+											isFlipped={i === state.cardOne[0] || i === state.cardTwo[0]}
 											onCardFlip={() => handleCardFlip(i, pokeId)}
 										/>
 									)}
 								</div>
 							))}
 					</div>
-					{cardsSum === matched.length && (
+					{cardsSum === state.matched.length && (
 						<GameEndScreen
-							winner={getWinner(playerOne, playerTwo)}
-							turnCount={turnCount}
+							winner={getWinner(state.playerOne, state.playerTwo)}
+							turnCount={state.turnCount}
 							onGameReset={resetGame}
 						/>
 					)}
 				</div>
 			</div>
 			<PlayerPanel
-				player={playerTwo}
-				otherPlayerName={playerOne.name}
-				onPlayerNameChange={(name: string) => setPlayerTwo((prev) => ({ ...prev, name: name }))}
+				player={state.playerTwo}
+				otherPlayerName={state.playerOne.name}
+				onPlayerNameChange={(name: string) =>
+					dispatch({ type: GameActions.SET_PLAYER_NAME, player: 'playerTwo', name })
+				}
 			/>
 		</div>
 	)

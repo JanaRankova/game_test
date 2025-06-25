@@ -51,6 +51,7 @@ export default function PlayerPanel({ player, otherPlayerName, onPlayerNameChang
 		setIsEditing(false)
 		onPlayerNameChange(previousName)
 		setName(previousName)
+		setNameError(null)
 	}
 
 	return (

@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import PlayerPanel from './Player'
-import { Player } from '../../types'
+import { Player } from '../../common/types'
 
 describe('PlayerPanel Component', () => {
 	const testPlayer: Player = {

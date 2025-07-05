@@ -1,10 +1,10 @@
 import { useReducer } from 'react'
 
-import { defaultPlayer1, defaultPlayer2, emptyCard } from '../constants'
-import { Flip, Player, PokemonDetails } from '../types'
-import { getNewDeck } from '../utils'
-import { gameReducer } from '../reducer'
-import { GameActions } from '../actions'
+import { defaultPlayer1, defaultPlayer2, emptyCard } from '../common/constants'
+import { Flip, Player, PokemonDetails } from '../common/types'
+import { getNewDeck } from '../common/utils'
+import { gameReducer } from '../common/reducer'
+import { GameActions } from '../common/actions'
 
 import GameEndScreen from '../components/GameEndScreen/GameEndScreen'
 import PlayerPanel from './Player/Player'

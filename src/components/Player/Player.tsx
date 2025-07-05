@@ -3,10 +3,10 @@ import errorImage from '../../assets/unknown-pokemon.png'
 import EditSvg from '../../assets/icons/edit.svg?react'
 import { useState } from 'react'
 import classNames from 'classnames'
-import { useMediaQuery } from '../../hooks'
+import { useMediaQuery } from '../../common/hooks'
 
 import Input from '../Input/Input'
-import { Player } from '../../types'
+import { Player } from '../../common/types'
 
 interface Props {
 	player: Player
@@ -51,6 +51,7 @@ export default function PlayerPanel({ player, otherPlayerName, onPlayerNameChang
 		setIsEditing(false)
 		onPlayerNameChange(previousName)
 		setName(previousName)
+		setNameError(null)
 	}
 
 	return (

@@ -1,6 +1,6 @@
 import pkmLogo from './assets/pokemon-logo-png-file-pokemon-logo-png-500.png'
-import { useGetAllPokemons, useGetEveryPokemonData } from './api'
-import { isDetailedPokemon, isPokemonListItem } from './types'
+import { useGetAllPokemons, useGetEveryPokemonData } from './common/api'
+import { isDetailedPokemon, isPokemonListItem } from './common/types'
 
 import DefaultFallback from './components/ErrorHandling/DefaultFallback'
 import Game from './components/Game'
